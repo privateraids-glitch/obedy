@@ -208,7 +208,7 @@ button:disabled{opacity:.5;cursor:default}
     })}};
   }
 
-  var PROXY_URL='';   // sem vlož adresu Cloudflare Workeru, např. https://obedy.neco.workers.dev
+  var PROXY_URL='https://obedy.privateraids.workers.dev/';   // sem vlož adresu Cloudflare Workeru, např. https://obedy.neco.workers.dev
   async function pxCall(method,body){
     var pw='';try{pw=localStorage.getItem('obedyPw')||''}catch(e){}
     var r=await fetch(PROXY_URL,{method:method,headers:{'Content-Type':'application/json','X-Obedy-Password':pw},body:body?JSON.stringify(body):undefined,cache:'no-store'});
