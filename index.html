@@ -231,6 +231,82 @@ button:disabled{opacity:.5;cursor:default}
     })}};
   }
 
+  var PROXY_URL='https://obedy.privateraids.workers.dev/';   // adresa Cloudflare Workeru
+  async function pxCall(method,body,path){
+    var pw='';try{pw=localStorage.getItem('obedyPw')||''}catch(e){}
+    var r=await fetch(PROXY_URL+(path||''),{method:method,headers:{'Content-Type':'application/json','X-Obedy-Password':pw},body:body?JSON.stringify(body):undefined,cache:'no-store'});
+    if(r.status===401){
+      var p=prompt('Heslo k obědům:');
+      if(!p)throw new Error('Chybí heslo.');
+      try{localStorage.setItem('obedyPw',p)}catch(e){}
+      return pxCall(method,body,path);
+    }
+    return r;
+  }
+  var GH_DEFAULT={repo:'',branch:'main',path:'obedy-data.json'};
+  var gh=null, ghSha='';
+  function ghLoadCfg(){try{var c=JSON.parse(localStorage.getItem('obedyGh')||'null');if(c&&c.token&&c.repo)return c}catch(e){}return null}
+  function ghHd(extra){return Object.assign({'Authorization':'Bearer '+gh.token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},extra||{})}
+  function ghUrl(){return 'https://api.github.com/repos/'+gh.repo+'/contents/'+gh.path.split('/').map(encodeURIComponent).join('/')}
+  function b64dec(c){var b=atob(String(c).replace(/\s/g,'')),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return new TextDecoder().decode(u)}
+  function b64enc(s){var u=new TextEncoder().encode(s),o='';for(var i=0;i<u.length;i+=0x8000)o+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(o)}
+  function ghErr(r){return r.status===401?'neplatný nebo vypršelý token':r.status===403?'token nemá právo k repozitáři nebo je vyčerpán limit':r.status===404?'repozitář, větev nebo soubor nenalezen':('chyba '+r.status)}
+  async function ghRead(sinceSha){
+    if(PROXY_URL){
+      var pr=await pxCall('GET');
+      if(!pr.ok)throw new Error('Server: chyba '+pr.status);
+      var pj=await pr.json();
+      if(sinceSha&&pj.sha===sinceSha)return null;
+      var pd;try{pd=norm3(pj.text&&pj.text.trim()?JSON.parse(pj.text):{})}catch(e){throw new Error('Datový soubor není platný JSON.')}
+      return {d:pd,sha:pj.sha};
+    }
+    var r=await fetch(ghUrl()+'?ref='+encodeURIComponent(gh.branch),{headers:ghHd(),cache:'no-cache'});
+    if(r.status===404){
+      var rr=await fetch('https://api.github.com/repos/'+gh.repo,{headers:ghHd(),cache:'no-cache'});
+      if(!rr.ok)throw new Error('GitHub: '+ghErr(rr));
+      return {d:norm3({}),sha:null};
+    }
+    if(!r.ok)throw new Error('GitHub: '+ghErr(r));
+    var j=await r.json();
+    if(sinceSha&&j.sha===sinceSha)return null;
+    var txt;
+    if(j.content&&j.encoding==='base64')txt=b64dec(j.content);
+    else{
+      var b=await fetch('https://api.github.com/repos/'+gh.repo+'/git/blobs/'+j.sha,{headers:ghHd(),cache:'no-cache'});
+      if(!b.ok)throw new Error('GitHub: '+ghErr(b));
+      txt=b64dec((await b.json()).content);
+    }
+    var d;try{d=norm3(txt.trim()?JSON.parse(txt):{})}catch(e){throw new Error('Datový soubor na GitHubu není platný JSON.')}
+    return {d:d,sha:j.sha};
+  }
+  async function ghWrite(d,sha){
+    if(PROXY_URL){
+      var pr=await pxCall('PUT',{sha:sha,text:JSON.stringify(d)});
+      if(pr.status===409)return {conflict:true};
+      if(!pr.ok)throw new Error('Server: chyba '+pr.status);
+      return {sha:(await pr.json()).sha};
+    }
+    var body={message:'obědy: aktualizace dat',content:b64enc(JSON.stringify(d)),branch:gh.branch};
+    if(sha)body.sha=sha;
+    var r=await fetch(ghUrl(),{method:'PUT',headers:ghHd({'Content-Type':'application/json'}),body:JSON.stringify(body)});
+    if(r.status===409||r.status===422)return {conflict:true};
+    if(!r.ok)throw new Error('GitHub: '+ghErr(r));
+    return {sha:(await r.json()).content.sha};
+  }
+  async function ghMutate(fn){
+    for(var t=0;t<4;t++){
+      var cur=await ghRead();
+      fn(cur.d);
+      var w=await ghWrite(cur.d,cur.sha);
+      if(!w.conflict){data=cur.d;ghSha=w.sha;fire();return}
+    }
+    throw new Error('Soubor mezitím změnil někdo jiný, zkus to znovu.');
+  }
+  setInterval(async function(){
+    if(!gh)return;
+    try{var c=await ghRead(ghSha);if(c){data=c.d;ghSha=c.sha;fire()}}catch(e){}
+  },20000);
+
   function status(){
     var s=$('fstat');
     if(gh){s.textContent=PROXY_URL?'☁ Sdílená data ✔ změny vidí všichni':'☁ GitHub: '+gh.repo+' / '+gh.path+' ✔ změny se ukládají do repozitáře';$('fneed').hidden=true;return}
