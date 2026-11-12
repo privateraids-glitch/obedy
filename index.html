@@ -66,6 +66,10 @@ button:disabled{opacity:.5;cursor:default}
 .fm input[type=text]{margin-bottom:6px}
 .addph{display:inline-block;margin-top:10px;border:1px dashed var(--bd);border-radius:8px;padding:7px 12px;cursor:pointer;font-size:.9rem;color:var(--mut)}
 .del{background:none;color:var(--mut);padding:0;font-weight:400;font-size:.8rem;margin-top:10px;text-decoration:underline;display:block}
+.thumbs img{cursor:zoom-in}
+#lb{position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px;cursor:zoom-out}
+#lb[hidden]{display:none}
+#lb img{max-width:100%;max-height:100%;border-radius:8px;object-fit:contain}
 .empty{color:var(--mut);text-align:center;padding:30px 0}
 @media(max-width:700px){.rowh{grid-template-columns:minmax(0,1fr) auto}.rowh .meta{grid-column:1/-1;order:3}.item .body{padding-left:14px}}
 @media(max-width:560px){.row{grid-template-columns:1fr 1fr}.bar{grid-template-columns:1fr}}
@@ -73,6 +77,7 @@ button:disabled{opacity:.5;cursor:default}
 </style>
 </head>
 <body>
+<div id="lb" hidden><img alt=""></div>
 <main>
 <h1>🍽️ Naše obědy</h1>
 <p class="sub">Načti jídelníček, pak jídla vyhledej a přidej k nim fotku a hodnocení. Všechno se ukládá do sdíleného datového souboru.</p>
@@ -142,6 +147,8 @@ button:disabled{opacity:.5;cursor:default}
   function slug(s){return norm(s).replace(/ /g,'-').slice(0,40)||'anon'}
   function stars(a){var n=Math.round(a),s='';for(var i=1;i<=5;i++)s+=i<=n?'★':'☆';return '<span class="star">'+s+'</span>'}
 
+  $('lb').onclick=function(){$('lb').hidden=true};
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')$('lb').hidden=true});
   function sub(name,cb){
     db.collection(name).onSnapshot(function(s){
       cb(s.docs.map(function(d){var v=d.data()||{};v.id=d.id;return v}));
@@ -202,95 +209,27 @@ button:disabled{opacity:.5;cursor:default}
       update:function(v){return mutate(function(d){d[n][id]=Object.assign({},d[n][id],v)})},
       delete:function(){return mutate(function(d){delete d[n][id]})}}}
   }}};
+  var photoCache={};
   function localAssets(){
     return {upload:function(file){return new Promise(function(res,rej){
       var img=new Image();
       img.onload=function(){
-        var k=Math.min(1,700/Math.max(img.width,img.height)),c=document.createElement('canvas');
+        var max=PROXY_URL?1280:700,k=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement('canvas');
         c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);
         c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-        res({url:c.toDataURL('image/jpeg',0.65),id:'p'+Date.now()});
+        var du=c.toDataURL('image/jpeg',PROXY_URL?0.8:0.65),id='p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+        if(!PROXY_URL)return res({url:du,id:id});
+        pxCall('POST',{id:id,content:du.split(',')[1]},'photo').then(function(r){
+          return r.json().then(function(j){
+            if(!r.ok)throw new Error(j.error||('chyba '+r.status));
+            photoCache[j.url]=du;res({url:j.url,id:id});
+          });
+        }).catch(rej);
       };
       img.onerror=function(){rej(new Error('Obrázek nejde načíst'))};
       img.src=URL.createObjectURL(file);
     })}};
   }
-
-  var PROXY_URL='https://obedy.privateraids.workers.dev/';   // sem vlož adresu Cloudflare Workeru, např. https://obedy.neco.workers.dev
-  async function pxCall(method,body){
-    var pw='';try{pw=localStorage.getItem('obedyPw')||''}catch(e){}
-    var r=await fetch(PROXY_URL,{method:method,headers:{'Content-Type':'application/json','X-Obedy-Password':pw},body:body?JSON.stringify(body):undefined,cache:'no-store'});
-    if(r.status===401){
-      var p=prompt('Heslo k obědům:');
-      if(!p)throw new Error('Chybí heslo.');
-      try{localStorage.setItem('obedyPw',p)}catch(e){}
-      return pxCall(method,body);
-    }
-    return r;
-  }
-  var GH_DEFAULT={repo:'',branch:'main',path:'obedy-data.json'};
-  var gh=null, ghSha='';
-  function ghLoadCfg(){try{var c=JSON.parse(localStorage.getItem('obedyGh')||'null');if(c&&c.token&&c.repo)return c}catch(e){}return null}
-  function ghHd(extra){return Object.assign({'Authorization':'Bearer '+gh.token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},extra||{})}
-  function ghUrl(){return 'https://api.github.com/repos/'+gh.repo+'/contents/'+gh.path.split('/').map(encodeURIComponent).join('/')}
-  function b64dec(c){var b=atob(String(c).replace(/\s/g,'')),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return new TextDecoder().decode(u)}
-  function b64enc(s){var u=new TextEncoder().encode(s),o='';for(var i=0;i<u.length;i+=0x8000)o+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(o)}
-  function ghErr(r){return r.status===401?'neplatný nebo vypršelý token':r.status===403?'token nemá právo k repozitáři nebo je vyčerpán limit':r.status===404?'repozitář, větev nebo soubor nenalezen':('chyba '+r.status)}
-  async function ghRead(sinceSha){
-    if(PROXY_URL){
-      var pr=await pxCall('GET');
-      if(!pr.ok)throw new Error('Server: chyba '+pr.status);
-      var pj=await pr.json();
-      if(sinceSha&&pj.sha===sinceSha)return null;
-      var pd;try{pd=norm3(pj.text&&pj.text.trim()?JSON.parse(pj.text):{})}catch(e){throw new Error('Datový soubor není platný JSON.')}
-      return {d:pd,sha:pj.sha};
-    }
-    var r=await fetch(ghUrl()+'?ref='+encodeURIComponent(gh.branch),{headers:ghHd(),cache:'no-cache'});
-    if(r.status===404){
-      var rr=await fetch('https://api.github.com/repos/'+gh.repo,{headers:ghHd(),cache:'no-cache'});
-      if(!rr.ok)throw new Error('GitHub: '+ghErr(rr));
-      return {d:norm3({}),sha:null};
-    }
-    if(!r.ok)throw new Error('GitHub: '+ghErr(r));
-    var j=await r.json();
-    if(sinceSha&&j.sha===sinceSha)return null;
-    var txt;
-    if(j.content&&j.encoding==='base64')txt=b64dec(j.content);
-    else{
-      var b=await fetch('https://api.github.com/repos/'+gh.repo+'/git/blobs/'+j.sha,{headers:ghHd(),cache:'no-cache'});
-      if(!b.ok)throw new Error('GitHub: '+ghErr(b));
-      txt=b64dec((await b.json()).content);
-    }
-    var d;try{d=norm3(txt.trim()?JSON.parse(txt):{})}catch(e){throw new Error('Datový soubor na GitHubu není platný JSON.')}
-    return {d:d,sha:j.sha};
-  }
-  async function ghWrite(d,sha){
-    if(PROXY_URL){
-      var pr=await pxCall('PUT',{sha:sha,text:JSON.stringify(d)});
-      if(pr.status===409)return {conflict:true};
-      if(!pr.ok)throw new Error('Server: chyba '+pr.status);
-      return {sha:(await pr.json()).sha};
-    }
-    var body={message:'obědy: aktualizace dat',content:b64enc(JSON.stringify(d)),branch:gh.branch};
-    if(sha)body.sha=sha;
-    var r=await fetch(ghUrl(),{method:'PUT',headers:ghHd({'Content-Type':'application/json'}),body:JSON.stringify(body)});
-    if(r.status===409||r.status===422)return {conflict:true};
-    if(!r.ok)throw new Error('GitHub: '+ghErr(r));
-    return {sha:(await r.json()).content.sha};
-  }
-  async function ghMutate(fn){
-    for(var t=0;t<4;t++){
-      var cur=await ghRead();
-      fn(cur.d);
-      var w=await ghWrite(cur.d,cur.sha);
-      if(!w.conflict){data=cur.d;ghSha=w.sha;fire();return}
-    }
-    throw new Error('Soubor mezitím změnil někdo jiný, zkus to znovu.');
-  }
-  setInterval(async function(){
-    if(!gh)return;
-    try{var c=await ghRead(ghSha);if(c){data=c.d;ghSha=c.sha;fire()}}catch(e){}
-  },20000);
 
   function status(){
     var s=$('fstat');
@@ -423,7 +362,7 @@ button:disabled{opacity:.5;cursor:default}
     a.innerHTML='<summary class="rowh"><span class="nm1">'+esc(l.name)+'</span><span class="meta">'+meta+'</span><span class="avg">'+
       (rs.length?stars(av)+' '+av.toFixed(1)+' <span class="meta">('+rs.length+')</span>':'<span class="meta">bez hodnocení</span>')+
       (ph.length?' <span class="meta">📷</span>':'')+'</span></summary><div class="body">'+
-      (ph.length?'<div class="thumbs">'+ph.map(function(p){return '<img loading="lazy" src="'+esc(p.url)+'" alt="">'}).join('')+'</div>':'')+
+      (ph.length?'<div class="thumbs">'+ph.map(function(p){return '<img loading="lazy" src="'+esc(photoCache[p.url]||p.url)+'" alt="">'}).join('')+'</div>':'')+
       rs.map(function(r,i){
         return '<div class="rt" data-i="'+i+'"><b>'+esc(r.name)+'</b> '+stars(r.stars)+(r.text?' <span>'+esc(r.text)+'</span>':'')+'<button class="x" title="Smazat hodnocení">✕</button></div>'}).join('')+
       '<div class="fm"><input type="text" class="nm" placeholder="Tvoje jméno"><div class="pick">'+
@@ -432,6 +371,7 @@ button:disabled{opacity:.5;cursor:default}
       '<label class="addph">📷 '+(ph.length?'Změnit fotku':'Přidat fotku jídla')+'<input type="file" accept="image/*"></label>'+
       '<button class="del">Smazat jídlo</button></div>';
     a.addEventListener('toggle',function(){openIds[l.id]=a.open});
+    [].forEach.call(a.querySelectorAll('.thumbs img'),function(im){im.onclick=function(){$('lb').firstElementChild.src=im.src;$('lb').hidden=false}});
     var nm=a.querySelector('.nm'),tx=a.querySelector('.tx'),pick=a.querySelectorAll('.pick button');
     nm.value=d.name;tx.value=d.text;
     function paint(){[].forEach.call(pick,function(b){b.className=(+b.dataset.n<=d.stars)?'on':''})}
