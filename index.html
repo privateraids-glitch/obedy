@@ -93,6 +93,16 @@ button:disabled{opacity:.45;cursor:default;box-shadow:none}
 .cph{position:relative;aspect-ratio:4/3;overflow:hidden;display:grid;place-items:center;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 34%,var(--card)),color-mix(in srgb,var(--c) 8%,var(--card)))}
 .cph .emo{display:grid;color:var(--c);opacity:.55}
 .cph .emo .i{width:58px;height:58px;stroke-width:1.3;margin:0}
+.cph .gal{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.cph .gal::-webkit-scrollbar{display:none}
+.cph .gal img{position:static;flex:0 0 100%;width:100%;height:100%;scroll-snap-align:center;object-fit:cover;cursor:zoom-in;transform:none!important}
+.pill.bl{bottom:10px;left:10px}
+.thumbs{display:flex;gap:8px;overflow-x:auto;margin-top:12px;padding:2px 2px 4px}
+.th{position:relative;flex:0 0 88px;height:88px;border-radius:14px;overflow:hidden;background:var(--soft)}
+.th img{width:100%;height:100%;object-fit:cover;display:block}
+.px{position:absolute;top:3px;right:3px;width:40px;height:40px;padding:0;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;box-shadow:none;display:grid;place-items:center}
+.px:hover{background:rgba(0,0,0,.8)}
+.px .i{width:15px;height:15px;margin:0}
 .cph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in;transition:transform .4s}
 .item:hover .cph img{transform:scale(1.04)}
 .cph.has::after{content:'';position:absolute;inset:auto 0 0 0;height:42%;background:linear-gradient(transparent,rgba(0,0,0,.38));pointer-events:none}
@@ -103,6 +113,8 @@ button:disabled{opacity:.45;cursor:default;box-shadow:none}
 .cb h3{margin:0 0 3px;font-size:1.04rem;line-height:1.3;font-weight:700;letter-spacing:-.01em;overflow-wrap:anywhere}
 .cb .avg{margin:6px 0 0;font-size:.95rem}
 .star{color:var(--st);letter-spacing:1px}
+.stars{white-space:nowrap;letter-spacing:1px}
+.sg,.pick button.sg,.pick button.sg:hover{background:linear-gradient(90deg,var(--st) var(--f,0%),color-mix(in srgb,var(--mut) 28%,transparent) var(--f,0%));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
 .cb details{margin-top:12px}
 .cb details>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;border-radius:14px;background:var(--soft);font-weight:650;font-size:.88rem}
 .cb details>summary::-webkit-details-marker{display:none}
@@ -113,9 +125,10 @@ button:disabled{opacity:.45;cursor:default;box-shadow:none}
 .rt .x{background:none;color:var(--mut);padding:0 4px;font-weight:400;margin-left:auto;box-shadow:none;border-radius:8px}
 .rt .x:hover{background:none;color:var(--tx)}
 .pick{display:flex;gap:2px;margin:8px 0}
-.pick button{background:none;color:var(--bd);font-size:1.8rem;padding:0 3px;line-height:1;box-shadow:none;transition:transform .12s,color .12s}
-.pick button:hover{background:none;color:var(--st);transform:scale(1.15)}
-.pick button.on{color:var(--st)}
+.pick{align-items:center}
+.pick button{font-size:1.9rem;padding:0 3px;line-height:1;box-shadow:none;transition:transform .12s}
+.pick button:hover{transform:scale(1.12)}
+.pick .pv{margin-left:10px;font-weight:700;font-size:1rem;color:var(--tx);min-width:2.2em;font-variant-numeric:tabular-nums}
 .fm{margin-top:12px}
 .fm input[type=text]{margin-bottom:8px;box-shadow:none;padding:9px 12px}
 .addph{display:inline-flex;align-items:center;gap:6px;margin-top:12px;border:1px dashed var(--bd);border-radius:14px;padding:9px 14px;cursor:pointer;font-size:.88rem;color:var(--mut);font-weight:600;margin-bottom:0}
@@ -181,6 +194,13 @@ body.sheet-open #toasts{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
 #lb{position:fixed;inset:0;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;z-index:70;padding:16px;cursor:zoom-out}
 #lb[hidden]{display:none}
 #lb img{max-width:100%;max-height:100%;border-radius:14px;object-fit:contain}
+.lbn{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;padding:0;border-radius:50%;background:rgba(255,255,255,.16);color:#fff;box-shadow:none;display:grid;place-items:center;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.lbn:hover{background:rgba(255,255,255,.28)}
+.lbn .i{width:24px;height:24px;margin:0}
+.lbn.prev{left:12px}.lbn.next{right:12px}
+.lbn[hidden]{display:none}
+.lbc{position:absolute;bottom:calc(18px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);color:#fff;font-weight:700;font-size:.9rem;background:rgba(0,0,0,.45);padding:5px 12px;border-radius:999px}
+.lbc:empty{display:none}
 @media(max-width:700px){.row{grid-template-columns:1fr 1fr}.list{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}.mrow{grid-template-columns:auto 1fr 76px}.mrow select{grid-column:2/-1}.bar2{grid-template-columns:1fr 1fr}.bar2 select{grid-column:1/-1}}
 @media(max-width:480px){.list{grid-template-columns:1fr}.cph{aspect-ratio:16/10}.sub{display:none}.searchrow select{max-width:142px;padding-inline:10px}}
 html{-webkit-tap-highlight-color:transparent}
@@ -189,8 +209,8 @@ button,summary,label,.item{touch-action:manipulation}
 .tools.hide{transform:translateY(-120%)}
 .shcard{overscroll-behavior:contain}
 @media(max-width:700px){
-.pick{gap:0;margin:4px -6px}
-.pick button{font-size:2.2rem;padding:4px 7px;min-height:46px;min-width:46px}
+.pick{gap:0;margin:4px -4px}
+.pick button{font-size:2.6rem;padding:2px 4px;min-height:52px;min-width:52px}
 .rt .x{min-width:44px;min-height:44px;margin:-12px -8px -12px auto;font-size:1.05rem}
 .del{padding:14px 0;font-size:.88rem;min-height:44px}
 .chips button{padding:10px 16px}
@@ -207,7 +227,7 @@ input,select{font-size:16px;min-height:46px}
 
 </head>
 <body>
-<div id="lb" hidden><img alt=""></div>
+<div id="lb" hidden><img alt=""><button id="lbp" class="lbn prev" type="button" aria-label="Předchozí" hidden><i data-i="chevl"></i></button><button id="lbn" class="lbn next" type="button" aria-label="Další" hidden><i data-i="chevr"></i></button><span id="lbc" class="lbc"></span></div>
 <main>
 <header class="top">
   <div class="brand"><div class="logo"><i data-i="utensils"></i></div><div><h1>Naše obědy</h1><p class="sub">Vyhledej jídlo, přidej fotku a hodnocení.</p></div></div>
@@ -269,7 +289,7 @@ input,select{font-size:16px;min-height:46px}
         <div><label for="price">Cena</label><input type="text" id="price" placeholder="120 Kč" inputmode="decimal" autocomplete="off"></div>
         <div><label for="sup">Dodavatel</label><select id="sup"><option value="">—</option><option>Soused</option><option>Hlaváček</option><option>Karl</option><option>Zelená</option></select></div>
       </div>
-      <label class="addph" id="mph"><i data-i="camera"></i>Přidat fotku jídla<input type="file" id="mphoto" accept="image/*"></label> <span class="meta" id="mphname"></span>
+      <label class="addph" id="mph"><i data-i="camera"></i>Přidat fotky jídla<input type="file" id="mphoto" accept="image/*" multiple></label> <span class="meta" id="mphname"></span>
       <div class="btns"><button id="save" type="button">Přidat jídlo</button></div>
     </div>
     <div id="optedit" hidden>
@@ -296,7 +316,12 @@ input,select{font-size:16px;min-height:46px}
   function esc(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML}
   function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim()}
   function slug(s){return norm(s).replace(/ /g,'-').slice(0,40)||'anon'}
-  function stars(a){var n=Math.round(a),s='';for(var i=1;i<=5;i++)s+=i<=n?'★':'☆';return '<span class="star">'+s+'</span>'}
+  function stars(a){
+    var r=Math.round(a*2)/2,s='';
+    for(var i=0;i<5;i++)s+='<span class="sg" style="--f:'+Math.round(Math.max(0,Math.min(1,r-i))*100)+'%">★</span>';
+    return '<span class="stars">'+s+'</span>';
+  }
+  function fmt(n){return (Math.round(n*10)/10).toFixed(1).replace('.',',')}
   function er(e){return (e&&(e.message||e.code))||String(e)}
   function newId(p){return (p||'l')+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
   function strip(o){var c=Object.assign({},o);delete c.id;return c}
@@ -318,6 +343,8 @@ input,select{font-size:16px;min-height:46px}
     upload:'<path d="M12 21V9M7 14l5-5 5 5M4 3h16"/>',
     clipboard:'<rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4V3h6v1M9 11h6M9 15h6"/>',
     pencil:'<path d="M17 3a2.8 2.8 0 0 1 4 4L8 20l-5 1 1-5z"/>',
+    chevl:'<path d="m15 18-6-6 6-6"/>',
+    chevr:'<path d="m9 18 6-6-6-6"/>',
     scan:'<path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/>'
   };
   function ic(n){return '<svg class="i" viewBox="0 0 24 24" aria-hidden="true">'+(ICONS[n]||'')+'</svg>'}
@@ -359,9 +386,27 @@ input,select{font-size:16px;min-height:46px}
   $('sheetx').onclick=closeAdd;$('shbg').onclick=closeAdd;
   $('tabmenu').onclick=function(){setTab('menu')};$('tabman').onclick=function(){setTab('man')};
   $('ftog').onclick=function(){$('bar2').hidden=!$('bar2').hidden};
-  $('mphoto').onchange=function(e){var f=e.target.files[0];$('mphname').textContent=f?f.name:''};
+  $('mphoto').onchange=function(e){var n=e.target.files.length;$('mphname').textContent=n>1?n+' fotky':(n?e.target.files[0].name:'')};
+  var lbList=[],lbIdx=0;
+  function lbShow(){
+    $('lb').querySelector('img').src=lbList[lbIdx];
+    $('lbc').textContent=lbList.length>1?(lbIdx+1)+' / '+lbList.length:'';
+    $('lbp').hidden=$('lbn').hidden=lbList.length<2;
+  }
+  function openLb(list,i){lbList=list;lbIdx=i||0;lbShow();$('lb').hidden=false}
+  function lbMove(d){if(lbList.length<2)return;lbIdx=(lbIdx+d+lbList.length)%lbList.length;lbShow()}
   $('lb').onclick=function(){$('lb').hidden=true};
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'){if(!$('lb').hidden)$('lb').hidden=true;else if(!$('sheet').hidden)closeAdd()}});
+  $('lbp').onclick=function(e){e.stopPropagation();lbMove(-1)};
+  $('lbn').onclick=function(e){e.stopPropagation();lbMove(1)};
+  (function(){var x0=null;
+    $('lb').addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});
+    $('lb').addEventListener('touchend',function(e){if(x0==null)return;var dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>50)lbMove(dx<0?1:-1)},{passive:true});
+  })();
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){if(!$('lb').hidden)$('lb').hidden=true;else if(!$('sheet').hidden)closeAdd()}
+    else if(!$('lb').hidden&&e.key==='ArrowLeft')lbMove(-1);
+    else if(!$('lb').hidden&&e.key==='ArrowRight')lbMove(1);
+  });
 
   /* lišta s hledáním se na telefonu schová při posouvání dolů a vrátí při posouvání nahoru */
   var lastY=0,tick=false;
@@ -471,13 +516,9 @@ input,select{font-size:16px;min-height:46px}
     photoCache[j.url]=du;
     return {url:j.url,id:id};
   }
-  async function setPhoto(lid,f){
+  async function addPhoto(lid,f){
     var up=await uploadPhoto(f);
-    var old=photos.filter(function(x){return x.lunchId===lid}).map(function(x){return x.id});
-    await mutate(function(d){
-      old.forEach(function(i){delete d.photos[i]});
-      d.photos[up.id]={lunchId:lid,url:up.url,created:Date.now()};
-    });
+    await mutate(function(d){d.photos[up.id]={lunchId:lid,url:up.url,created:Date.now()}});
   }
 
   /* ---------- vrácení smazání ---------- */
@@ -551,50 +592,74 @@ input,select{font-size:16px;min-height:46px}
     var h='<div class="stats-grid"><div class="stat"><b>'+lunches.length+'</b>jídel</div><div class="stat"><b>'+ratings.length+'</b>hodnocení</div><div class="stat"><b>'+lunches.filter(hasPh).length+'</b>s fotkou</div></div>';
     h+='<div class="h2">Nejlépe hodnocená jídla</div>';
     h+=rank.length?rank.map(function(x,i){
-      return '<div class="rank"><span class="n"><span class="medal'+(i<3?' m'+(i+1):'')+'">'+(i+1)+'</span></span><span class="t">'+esc(x.l.name)+(x.l.supplier?' <span class="meta">· '+esc(x.l.supplier)+'</span>':'')+'</span><span>'+stars(x.a)+' <b>'+x.a.toFixed(1)+'</b> <span class="meta">('+x.n+')</span></span></div>'}).join(''):'<div class="meta">Zatím nic nebylo hodnoceno.</div>';
+      return '<div class="rank"><span class="n"><span class="medal'+(i<3?' m'+(i+1):'')+'">'+(i+1)+'</span></span><span class="t">'+esc(x.l.name)+(x.l.supplier?' <span class="meta">· '+esc(x.l.supplier)+'</span>':'')+'</span><span>'+stars(x.a)+' <b>'+fmt(x.a)+'</b> <span class="meta">('+x.n+')</span></span></div>'}).join(''):'<div class="meta">Zatím nic nebylo hodnoceno.</div>';
     h+='<div class="h2">Dodavatelé podle hodnocení</div>';
     var rows=SUPN.map(function(sn){
       var sum=0,n=0;lunches.forEach(function(l){if(l.supplier===sn)(R[l.id]||[]).forEach(function(r){sum+=r.stars;n++})});
       return {sn:sn,a:n?sum/n:0,n:n};
     });
     h+=rows.map(function(r){
-      return '<div class="bar-s s-'+SK[r.sn]+'"><span class="nm">'+esc(r.sn)+'</span><span class="tr"><span class="fl" style="display:block;width:'+Math.round(r.a/5*100)+'%"></span></span><span>'+(r.n?'<b>'+r.a.toFixed(1)+'</b> <span class="meta">('+r.n+')</span>':'<span class="meta">—</span>')+'</span></div>'}).join('');
+      return '<div class="bar-s s-'+SK[r.sn]+'"><span class="nm">'+esc(r.sn)+'</span><span class="tr"><span class="fl" style="display:block;width:'+Math.round(r.a/5*100)+'%"></span></span><span>'+(r.n?'<b>'+fmt(r.a)+'</b> <span class="meta">('+r.n+')</span>':'<span class="meta">—</span>')+'</span></div>'}).join('');
     $('statsbody').innerHTML=h;
   }
 
   function card(l,rs,ph,av){
     var d=drafts[l.id]||(drafts[l.id]={name:store('name')||'',stars:0,text:''});
-    ph=ph.slice().sort(function(x,y){return (y.created||0)-(x.created||0)});
-    ph=ph.length?[ph[0]]:(l.photo?[{url:l.photo}]:[]);
+    ph=ph.slice().sort(function(x,y){return (x.created||0)-(y.created||0)});
+    if(l.photo)ph=[{url:l.photo}].concat(ph);
+    var urls=ph.map(function(p){return photoCache[p.url]||p.url});
     var key=SK[l.supplier]||'';
     var a=document.createElement('article');a.className='item'+(key?' s-'+key:'');
     var meta=[l.date,l.supplier?l.code:(l.code||l.place)].filter(Boolean).map(esc).join(' · ');
     rs.sort(function(x,y){return (y.created||0)-(x.created||0)});
     var soup=/^Pol[eé]v/i.test(l.code||'')||/pol[eé]vk|vývar|kaldoun/i.test(l.name);
-    a.innerHTML='<div class="cph'+(ph.length?' has':'')+'">'+(ph.length?'<img loading="lazy" src="'+esc(photoCache[ph[0].url]||ph[0].url)+'" alt="">':'<span class="emo">'+ic(soup?'soup':'utensils')+'</span>')+
+    a.innerHTML='<div class="cph'+(ph.length?' has':'')+'">'+(ph.length?'<div class="gal">'+urls.map(function(u){return '<img loading="lazy" src="'+esc(u)+'" alt="">'}).join('')+'</div>':'<span class="emo">'+ic(soup?'soup':'utensils')+'</span>')+
+      (ph.length>1?'<span class="pill bl cnt">1/'+ph.length+'</span>':'')+
       (l.supplier?'<span class="pill tl"><i class="dot s-'+key+'"></i>'+esc(l.supplier)+'</span>':'')+
-      (rs.length?'<span class="pill tr"><span class="star">★</span>'+av.toFixed(1)+'</span>':'')+
+      (rs.length?'<span class="pill tr"><span class="star">★</span>'+fmt(av)+'</span>':'')+
       (l.price?'<span class="pill br">'+esc(l.price)+'</span>':'')+'</div>'+
       '<div class="cb"><h3>'+esc(l.name)+'</h3><div class="meta">'+meta+'</div>'+
       (rs.length?'<div class="avg">'+stars(av)+' <span class="meta">'+rs.length+'×</span></div>':'')+
-      '<details><summary><span>'+ic('star')+'Hodnotit · '+ic('camera')+(ph.length?'změnit fotku':'přidat fotku')+'</span></summary>'+
+      '<details><summary><span>'+ic('star')+'Hodnotit · '+ic('camera')+'fotky'+(ph.length>1?' ('+ph.length+')':'')+'</span></summary>'+
+      (ph.some(function(p){return p.id})?'<div class="thumbs">'+ph.map(function(p){return p.id?'<div class="th"><img loading="lazy" src="'+esc(photoCache[p.url]||p.url)+'" alt=""><button class="px" type="button" data-id="'+esc(p.id)+'" aria-label="Smazat fotku">'+ic('x')+'</button></div>':''}).join('')+'</div>':'')+
       rs.map(function(r,i){
         return '<div class="rt" data-i="'+i+'"><b>'+esc(r.name)+'</b> '+stars(r.stars)+(r.text?' <span>'+esc(r.text)+'</span>':'')+'<button class="x" title="Smazat hodnocení">✕</button></div>'}).join('')+
       '<div class="fm"><input type="text" class="nm" placeholder="Tvoje jméno" autocomplete="given-name" autocapitalize="words"><div class="pick">'+
-      [1,2,3,4,5].map(function(n){return '<button type="button" data-n="'+n+'" aria-label="'+n+' z 5">★</button>'}).join('')+
-      '</div><input type="text" class="tx" placeholder="Komentář (nepovinné)"><button class="rate">Uložit hodnocení</button></div>'+
-      '<label class="addph">'+ic('camera')+(ph.length?'Změnit fotku':'Přidat fotku jídla')+'<input type="file" accept="image/*"></label></details>'+
+      [1,2,3,4,5].map(function(n){return '<button type="button" class="sg" data-n="'+n+'" aria-label="'+n+' z 5">★</button>'}).join('')+
+      '<span class="pv"></span></div><input type="text" class="tx" placeholder="Komentář (nepovinné)"><button class="rate">Uložit hodnocení</button></div>'+
+      '<label class="addph">'+ic('camera')+'Přidat fotky<input type="file" accept="image/*" multiple></label></details>'+
       '<div class="acts"><button class="edit" type="button">'+ic('pencil')+'Upravit</button><button class="del" type="button">Smazat</button></div></div>';
     var det=a.querySelector('details');
     if(openIds[l.id])det.open=true;
     det.addEventListener('toggle',function(){openIds[l.id]=det.open});
-    var pim=a.querySelector('.cph img');
-    if(pim)pim.onclick=function(){$('lb').firstElementChild.src=pim.src;$('lb').hidden=false};
+    var gal=a.querySelector('.gal'),cnt=a.querySelector('.cnt');
+    if(gal){
+      [].forEach.call(gal.querySelectorAll('img'),function(im,i){im.onclick=function(){openLb(urls,i)}});
+      if(cnt)gal.addEventListener('scroll',function(){var i=Math.round(gal.scrollLeft/(gal.clientWidth||1));cnt.textContent=(i+1)+'/'+ph.length},{passive:true});
+    }
+    [].forEach.call(a.querySelectorAll('.th img'),function(im,i){im.onclick=function(){openLb(urls,i)}});
+    [].forEach.call(a.querySelectorAll('.px'),function(b){
+      b.onclick=async function(){
+        var pid=b.dataset.id,rec=photos.filter(function(x){return x.id===pid})[0];if(!rec)return;
+        var snap=strip(rec);
+        try{
+          await mutate(function(x){delete x.photos[pid]});
+          showUndo('Fotka smazána.',function(){return mutate(function(x){x.photos[pid]=snap})});
+        }catch(e){msg('Smazání se nepovedlo: '+er(e))}
+      };
+    });
     var nm=a.querySelector('.nm'),tx=a.querySelector('.tx'),pick=a.querySelectorAll('.pick button');
     nm.value=d.name;tx.value=d.text;
-    function paint(){[].forEach.call(pick,function(b){b.className=(+b.dataset.n<=d.stars)?'on':''})}
+    var pv=a.querySelector('.pv');
+    function paint(){
+      [].forEach.call(pick,function(b){b.style.setProperty('--f',Math.round(Math.max(0,Math.min(1,d.stars-(+b.dataset.n-1)))*100)+'%')});
+      pv.textContent=d.stars?fmt(d.stars):'';
+    }
     paint();
-    [].forEach.call(pick,function(b){b.onclick=function(){d.stars=+b.dataset.n;paint()}});
+    [].forEach.call(pick,function(b){b.onclick=function(e){
+      var r=b.getBoundingClientRect(),half=e.detail>0&&(e.clientX-r.left)<r.width/2;
+      d.stars=+b.dataset.n-(half?0.5:0);paint();
+    }});
     nm.oninput=function(){d.name=nm.value;store('name',nm.value)};
     tx.oninput=function(){d.text=tx.value};
     a.querySelector('.rate').onclick=async function(){
@@ -617,10 +682,12 @@ input,select{font-size:16px;min-height:46px}
       };
     });
     a.querySelector('.addph input').onchange=async function(e){
-      var f=e.target.files[0];
-      if(!f)return;
-      msg('Nahrávám fotku…',true);
-      try{await setPhoto(l.id,f);msg('Fotka uložena ✔')}catch(err){msg('Fotku se nepodařilo nahrát: '+er(err))}
+      var fs=[].slice.call(e.target.files);
+      if(!fs.length)return;
+      try{
+        for(var i=0;i<fs.length;i++){msg('Nahrávám fotku '+(i+1)+'/'+fs.length+'…',true);await addPhoto(l.id,fs[i])}
+        msg(fs.length>1?'Fotky uloženy ✔':'Fotka uložena ✔');
+      }catch(err){msg('Fotku se nepodařilo nahrát: '+er(err))}
     };
     a.querySelector('.edit').onclick=function(){openEdit(l)};
     a.querySelector('.del').onclick=async function(){
@@ -662,16 +729,16 @@ input,select{font-size:16px;min-height:46px}
   $('save').onclick=async function(){
     var n=$('name').value.trim();
     if(!n)return msg('Vyplň název jídla.');
-    var f=$('mphoto').files[0];
+    var fl=[].slice.call($('mphoto').files);
     $('save').disabled=true;
     try{
       var r=await addLunches([{name:n,price:money($('price').value),code:'',supplier:$('sup').value}],$('date').value);
       closeAdd();msg('Ukládám…',true);   // jídlo je na obrazovce hned, na pozadí se ukládá
       await r.done;
       var lid=r.ids[0];
-      if(f&&lid){msg('Nahrávám fotku…',true);await setPhoto(lid,f)}
+      if(fl.length&&lid){for(var fi=0;fi<fl.length;fi++){msg('Nahrávám fotku '+(fi+1)+'/'+fl.length+'…',true);await addPhoto(lid,fl[fi])}}
       ['name','price'].forEach(function(i){$(i).value=''});$('sup').value='';$('mphoto').value='';$('mphname').textContent='';
-      msg((r.added?'Jídlo přidáno ✔':'Takové jídlo už v seznamu je, posunul jsem mu datum.')+(f?' Fotka uložena.':''));
+      msg((r.added?'Jídlo přidáno ✔':'Takové jídlo už v seznamu je, posunul jsem mu datum.')+(fl.length?(fl.length>1?' Fotky uloženy.':' Fotka uložena.'):''));
     }catch(e){openAdd('man');msg('Uložení se nepovedlo: '+er(e))}
     $('save').disabled=false;
   };
