@@ -120,8 +120,11 @@ button:disabled{opacity:.45;cursor:default;box-shadow:none}
 .fm input[type=text]{margin-bottom:8px;box-shadow:none;padding:9px 12px}
 .addph{display:inline-flex;align-items:center;gap:6px;margin-top:12px;border:1px dashed var(--bd);border-radius:14px;padding:9px 14px;cursor:pointer;font-size:.88rem;color:var(--mut);font-weight:600;margin-bottom:0}
 .addph:hover{border-color:var(--ac);color:var(--tx)}
-.del{background:none;color:var(--mut);padding:0;font-weight:500;font-size:.78rem;margin-top:12px;text-decoration:underline;display:block;box-shadow:none}
-.del:hover{background:none;color:var(--tx)}
+.acts{display:flex;gap:18px;align-items:center;margin-top:8px}
+.edit,.del{background:none;color:var(--mut);padding:0;font-weight:600;font-size:.82rem;box-shadow:none;display:inline-flex;align-items:center;min-height:40px}
+.edit:hover,.del:hover{background:none;color:var(--tx)}
+.edit .i{width:15px;height:15px;margin-right:6px}
+.del{text-decoration:underline;font-weight:500}
 .sk{height:310px;border-radius:var(--r);background:linear-gradient(100deg,var(--soft) 30%,color-mix(in srgb,var(--soft) 55%,var(--card)) 50%,var(--soft) 70%);background-size:220% 100%;animation:shim 1.3s linear infinite}
 @keyframes shim{to{background-position:-220% 0}}
 .empty{color:var(--mut);text-align:center;padding:48px 0;display:grid;gap:12px;justify-items:center}
@@ -159,6 +162,7 @@ body.sheet-open .fab{display:none}
 .shhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .shhead h2{margin:0;font-size:1.25rem;letter-spacing:-.02em}
 .tabs{display:flex;gap:4px;background:var(--soft);border-radius:16px;padding:4px;margin-bottom:14px}
+.tabs[hidden]{display:none}
 .tabs button{flex:1;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:var(--mut);box-shadow:none;border-radius:12px;padding:10px 8px}
 .tabs button:hover{background:transparent;color:var(--tx)}
 .tabs button.on{background:var(--card);color:var(--tx);box-shadow:var(--sh)}
@@ -179,6 +183,25 @@ body.sheet-open #toasts{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
 #lb img{max-width:100%;max-height:100%;border-radius:14px;object-fit:contain}
 @media(max-width:700px){.row{grid-template-columns:1fr 1fr}.list{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}.mrow{grid-template-columns:auto 1fr 76px}.mrow select{grid-column:2/-1}.bar2{grid-template-columns:1fr 1fr}.bar2 select{grid-column:1/-1}}
 @media(max-width:480px){.list{grid-template-columns:1fr}.cph{aspect-ratio:16/10}.sub{display:none}.searchrow select{max-width:142px;padding-inline:10px}}
+html{-webkit-tap-highlight-color:transparent}
+button,summary,label,.item{touch-action:manipulation}
+.tools{transition:transform .25s ease}
+.tools.hide{transform:translateY(-120%)}
+.shcard{overscroll-behavior:contain}
+@media(max-width:700px){
+.pick{gap:0;margin:4px -6px}
+.pick button{font-size:2.2rem;padding:4px 7px;min-height:46px;min-width:46px}
+.rt .x{min-width:44px;min-height:44px;margin:-12px -8px -12px auto;font-size:1.05rem}
+.del{padding:14px 0;font-size:.88rem;min-height:44px}
+.chips button{padding:10px 16px}
+.cb details>summary{padding:14px}
+.addph{padding:13px 16px;min-height:44px}
+.shcard{max-height:92dvh}
+.btns button{min-height:46px}
+.tabs button{min-height:44px}
+input,select{font-size:16px;min-height:46px}
+.mrow input[type=checkbox]{min-height:0;width:24px;height:24px}
+}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 
@@ -193,7 +216,7 @@ body.sheet-open #toasts{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
 
 <section class="tools">
   <div class="searchrow">
-    <div class="sbox"><i data-i="search"></i><input type="search" id="q" placeholder="Hledat jídlo…" aria-label="Hledat jídlo"></div>
+    <div class="sbox"><i data-i="search"></i><input type="search" id="q" placeholder="Hledat jídlo…" aria-label="Hledat jídlo" enterkeyhint="search" autocomplete="off"></div>
     <select id="sort" aria-label="Řazení"><option value="new">Nejnovější</option><option value="best">Nejlépe hodnocené</option><option value="az">Podle abecedy</option></select>
     <button id="ftog" class="ico sm" type="button" aria-label="Filtry" title="Filtry"><i data-i="sliders"></i></button>
   </div>
@@ -230,8 +253,8 @@ body.sheet-open #toasts{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
 <div id="sheet" class="sheet" hidden>
   <div class="shbg" id="shbg"></div>
   <div class="shcard" role="dialog" aria-modal="true" aria-label="Přidat jídla">
-    <div class="shhead"><h2>Přidat</h2><button id="sheetx" class="ico sm" type="button" aria-label="Zavřít"><i data-i="x"></i></button></div>
-    <div class="tabs"><button id="tabmenu" class="on" type="button"><i data-i="clipboard"></i>Jídelníček</button><button id="tabman" type="button"><i data-i="pencil"></i>Ručně</button></div>
+    <div class="shhead"><h2 id="shtitle">Přidat</h2><button id="sheetx" class="ico sm" type="button" aria-label="Zavřít"><i data-i="x"></i></button></div>
+    <div class="tabs" id="tabs"><button id="tabmenu" class="on" type="button"><i data-i="clipboard"></i>Jídelníček</button><button id="tabman" type="button"><i data-i="pencil"></i>Ručně</button></div>
     <div id="optmenu">
       <label class="drop"><input type="file" id="file" accept="image/*"><i data-i="camera"></i>Vyber screenshot nebo fotku jídelníčku</label>
       <img id="preview" alt="" hidden>
@@ -241,13 +264,22 @@ body.sheet-open #toasts{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
     </div>
     <div id="optman" hidden>
       <div class="row">
-        <div class="full"><label for="name">Název jídla</label><input type="text" id="name"></div>
+        <div class="full"><label for="name">Název jídla</label><input type="text" id="name" list="dn" autocapitalize="sentences" autocomplete="off"><datalist id="dn"></datalist></div>
         <div><label for="date">Datum</label><input type="date" id="date"></div>
-        <div><label for="price">Cena</label><input type="text" id="price" placeholder="120 Kč"></div>
+        <div><label for="price">Cena</label><input type="text" id="price" placeholder="120 Kč" inputmode="decimal" autocomplete="off"></div>
         <div><label for="sup">Dodavatel</label><select id="sup"><option value="">—</option><option>Soused</option><option>Hlaváček</option><option>Karl</option><option>Zelená</option></select></div>
       </div>
       <label class="addph" id="mph"><i data-i="camera"></i>Přidat fotku jídla<input type="file" id="mphoto" accept="image/*"></label> <span class="meta" id="mphname"></span>
       <div class="btns"><button id="save" type="button">Přidat jídlo</button></div>
+    </div>
+    <div id="optedit" hidden>
+      <div class="row">
+        <div class="full"><label for="ename">Název jídla</label><input type="text" id="ename" autocapitalize="sentences" autocomplete="off"></div>
+        <div><label for="edate">Datum</label><input type="date" id="edate"></div>
+        <div><label for="eprice">Cena</label><input type="text" id="eprice" placeholder="120 Kč" inputmode="decimal" autocomplete="off"></div>
+        <div><label for="esup">Dodavatel</label><select id="esup"><option value="">—</option><option>Soused</option><option>Hlaváček</option><option>Karl</option><option>Zelená</option></select></div>
+      </div>
+      <div class="btns"><button id="esave" type="button">Uložit změny</button><button id="ecancel" class="sec" type="button">Zrušit</button></div>
     </div>
   </div>
 </div>
@@ -309,7 +341,18 @@ body.sheet-open #toasts{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
     $('optmenu').hidden=t!=='menu';$('optman').hidden=t!=='man';
     $('tabmenu').className=t==='menu'?'on':'';$('tabman').className=t==='man'?'on':'';
   }
-  function openAdd(t){$('sheet').hidden=false;document.body.classList.add('noscroll','sheet-open');setTab(t||'menu')}
+  function openAdd(t){
+    $('optedit').hidden=true;$('tabs').hidden=false;$('shtitle').textContent='Přidat';
+    $('sheet').hidden=false;document.body.classList.add('noscroll','sheet-open');setTab(t||'menu');
+  }
+  var editId=null;
+  function openEdit(l,v){
+    v=v||{};editId=l.id;
+    $('ename').value=v.name!=null?v.name:(l.name||'');$('edate').value=v.date!=null?v.date:(l.date||'');
+    $('eprice').value=v.price!=null?v.price:(l.price||'');$('esup').value=v.supplier!=null?v.supplier:(l.supplier||'');
+    $('shtitle').textContent='Upravit jídlo';$('tabs').hidden=true;$('optmenu').hidden=true;$('optman').hidden=true;$('optedit').hidden=false;
+    $('sheet').hidden=false;document.body.classList.add('noscroll','sheet-open');
+  }
   function closeAdd(){$('sheet').hidden=true;document.body.classList.remove('noscroll','sheet-open')}
   $('fab').onclick=function(){openAdd('menu')};
   $('emptyadd').onclick=function(){openAdd('man')};
@@ -319,6 +362,19 @@ body.sheet-open #toasts{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
   $('mphoto').onchange=function(e){var f=e.target.files[0];$('mphname').textContent=f?f.name:''};
   $('lb').onclick=function(){$('lb').hidden=true};
   document.addEventListener('keydown',function(e){if(e.key==='Escape'){if(!$('lb').hidden)$('lb').hidden=true;else if(!$('sheet').hidden)closeAdd()}});
+
+  /* lišta s hledáním se na telefonu schová při posouvání dolů a vrátí při posouvání nahoru */
+  var lastY=0,tick=false;
+  window.addEventListener('scroll',function(){
+    if(tick)return;tick=true;
+    requestAnimationFrame(function(){
+      var y=window.scrollY||0,t=document.querySelector('.tools');
+      if(y<80||!$('bar2').hidden||document.activeElement===$('q'))t.classList.remove('hide');
+      else if(y>lastY+10)t.classList.add('hide');
+      else if(y<lastY-10)t.classList.remove('hide');
+      lastY=y;tick=false;
+    });
+  },{passive:true});
 
   /* ---------- dodavatelé ---------- */
   var SUP={SOU:'Soused',HLA:'Hlaváček',KAR:'Karl',ZEL:'Zelená'};
@@ -436,6 +492,7 @@ body.sheet-open #toasts{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
   };
 
   /* ---------- seznam, filtry, přehled ---------- */
+  function money(v){v=String(v||'').trim();return /^\d+([.,]\d{1,2})?$/.test(v)?v.replace('.',',')+' Kč':v}
   function priceNum(l){var m=String(l.price||'').replace(/\s/g,'').match(/\d+/);return m?+m[0]:null}
   function render(){
     var act=document.activeElement;
@@ -481,6 +538,7 @@ body.sheet-open #toasts{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
     $('emptyadd').hidden=!!lunches.length;
     $('ftog').classList.toggle('act',!!(ff||!isNaN(pmin)||!isNaN(pmax)));
     arr2.forEach(function(l){el.appendChild(card(l,R[l.id]||[],P[l.id]||[],avg(l)))});
+    var dn=$('dn');if(dn){dn.innerHTML='';lunches.slice(0,300).forEach(function(l){var o=document.createElement('option');o.value=l.name;dn.appendChild(o)})}
     renderStats(R,hasPh,avg);
   }
   document.addEventListener('focusout',function(){setTimeout(function(){if(pending)render()},150)});
@@ -522,11 +580,11 @@ body.sheet-open #toasts{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
       '<details><summary><span>'+ic('star')+'Hodnotit · '+ic('camera')+(ph.length?'změnit fotku':'přidat fotku')+'</span></summary>'+
       rs.map(function(r,i){
         return '<div class="rt" data-i="'+i+'"><b>'+esc(r.name)+'</b> '+stars(r.stars)+(r.text?' <span>'+esc(r.text)+'</span>':'')+'<button class="x" title="Smazat hodnocení">✕</button></div>'}).join('')+
-      '<div class="fm"><input type="text" class="nm" placeholder="Tvoje jméno"><div class="pick">'+
+      '<div class="fm"><input type="text" class="nm" placeholder="Tvoje jméno" autocomplete="given-name" autocapitalize="words"><div class="pick">'+
       [1,2,3,4,5].map(function(n){return '<button type="button" data-n="'+n+'" aria-label="'+n+' z 5">★</button>'}).join('')+
       '</div><input type="text" class="tx" placeholder="Komentář (nepovinné)"><button class="rate">Uložit hodnocení</button></div>'+
       '<label class="addph">'+ic('camera')+(ph.length?'Změnit fotku':'Přidat fotku jídla')+'<input type="file" accept="image/*"></label></details>'+
-      '<button class="del">Smazat jídlo</button></div>';
+      '<div class="acts"><button class="edit" type="button">'+ic('pencil')+'Upravit</button><button class="del" type="button">Smazat</button></div></div>';
     var det=a.querySelector('details');
     if(openIds[l.id])det.open=true;
     det.addEventListener('toggle',function(){openIds[l.id]=det.open});
@@ -564,6 +622,7 @@ body.sheet-open #toasts{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
       msg('Nahrávám fotku…',true);
       try{await setPhoto(l.id,f);msg('Fotka uložena ✔')}catch(err){msg('Fotku se nepodařilo nahrát: '+er(err))}
     };
+    a.querySelector('.edit').onclick=function(){openEdit(l)};
     a.querySelector('.del').onclick=async function(){
       var rr=ratings.filter(function(r){return r.lunchId===l.id}),pp=photos.filter(function(p){return p.lunchId===l.id});
       var snap={l:strip(l),rs:rr.map(function(r){return [r.id,strip(r)]}),ps:pp.map(function(p){return [p.id,strip(p)]})};
@@ -606,7 +665,7 @@ body.sheet-open #toasts{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
     var f=$('mphoto').files[0];
     $('save').disabled=true;
     try{
-      var r=await addLunches([{name:n,price:$('price').value.trim(),code:'',supplier:$('sup').value}],$('date').value);
+      var r=await addLunches([{name:n,price:money($('price').value),code:'',supplier:$('sup').value}],$('date').value);
       closeAdd();msg('Ukládám…',true);   // jídlo je na obrazovce hned, na pozadí se ukládá
       await r.done;
       var lid=r.ids[0];
@@ -736,7 +795,7 @@ body.sheet-open #toasts{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
       sp.value=it.supplier||'';
       var s=document.createElement('small');s.textContent=it.code||'';
       r.appendChild(cb);r.appendChild(n);r.appendChild(pp);r.appendChild(sp);if(it.code)r.appendChild(s);
-      r._get=function(){return cb.checked&&n.value.trim()?{name:n.value.trim(),price:pp.value.trim(),code:it.code||'',supplier:sp.value}:null};
+      r._get=function(){return cb.checked&&n.value.trim()?{name:n.value.trim(),price:money(pp.value),code:it.code||'',supplier:sp.value}:null};
       m.appendChild(r);
     });
     var b=document.createElement('button');b.textContent='Uložit vybrané obědy';
@@ -796,6 +855,26 @@ body.sheet-open #toasts{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
       msg('Záloha načtena ✔');
     }catch(err){msg('Zálohu nejde načíst: '+er(err))}
     e.target.value='';
+  };
+
+  /* ---------- úprava jídla ---------- */
+  $('ecancel').onclick=closeAdd;
+  $('esave').onclick=async function(){
+    var id=editId,n=$('ename').value.trim();
+    if(!n)return msg('Název nesmí být prázdný.');
+    var old=lunches.filter(function(x){return x.id===id})[0];
+    if(!old){closeAdd();return}
+    var patch={name:n,date:$('edate').value,price:money($('eprice').value),supplier:$('esup').value};
+    var before=strip(old);
+    closeAdd();
+    try{
+      await mutate(function(d){if(d.lunches[id])d.lunches[id]=Object.assign({},d.lunches[id],patch)});
+      showUndo('Jídlo upraveno.',function(){return mutate(function(d){if(d.lunches[id])d.lunches[id]=before})});
+    }catch(e){
+      var cur=lunches.filter(function(x){return x.id===id})[0];
+      if(cur)openEdit(cur,patch);
+      msg('Úprava se nepovedla: '+er(e));
+    }
   };
 
   /* ---------- start ---------- */
