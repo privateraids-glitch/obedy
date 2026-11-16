@@ -122,8 +122,12 @@ button:disabled{opacity:.45;cursor:default;box-shadow:none}
 .cb details[open]>summary::after{transform:rotate(90deg)}
 .cb details>summary:hover{background:color-mix(in srgb,var(--soft) 70%,var(--bd))}
 .rt{font-size:.9rem;margin:10px 0 0;display:flex;gap:6px;align-items:baseline;flex-wrap:wrap}
-.rt .x{background:none;color:var(--mut);padding:0 4px;font-weight:400;margin-left:auto;box-shadow:none;border-radius:8px}
-.rt .x:hover{background:none;color:var(--tx)}
+.rt .ra{margin-left:auto;display:flex;gap:0}
+.rt .x,.rt .re{background:none;color:var(--mut);padding:0 7px;font-weight:400;box-shadow:none;border-radius:8px;display:inline-grid;place-items:center;min-height:30px}
+.rt .x:hover,.rt .re:hover{background:none;color:var(--tx)}
+.rt .re .i{width:15px;height:15px;margin:0}
+.editnote{font-size:.82rem;font-weight:650;color:var(--ac);margin-bottom:8px}
+.fm .sec{margin-top:8px}
 .pick{display:flex;gap:2px;margin:8px 0}
 .pick{align-items:center}
 .pick button{font-size:1.9rem;padding:0 3px;line-height:1;box-shadow:none;transition:transform .12s}
@@ -211,7 +215,8 @@ button,summary,label,.item{touch-action:manipulation}
 @media(max-width:700px){
 .pick{gap:0;margin:4px -4px}
 .pick button{font-size:2.6rem;padding:2px 4px;min-height:52px;min-width:52px}
-.rt .x{min-width:44px;min-height:44px;margin:-12px -8px -12px auto;font-size:1.05rem}
+.rt .x,.rt .re{min-width:44px;min-height:44px}
+.rt .ra{margin:-12px -8px -12px auto}
 .del{padding:14px 0;font-size:.88rem;min-height:44px}
 .chips button{padding:10px 16px}
 .cb details>summary{padding:14px}
@@ -324,6 +329,7 @@ input,select{font-size:16px;min-height:46px}
   function fmt(n){return (Math.round(n*10)/10).toFixed(1).replace('.',',')}
   function er(e){return (e&&(e.message||e.code))||String(e)}
   function newId(p){return (p||'l')+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+  var uid=store('obedyUid');if(!uid){uid=newId('u')+Math.random().toString(36).slice(2,8);store('obedyUid',uid)}
   function strip(o){var c=Object.assign({},o);delete c.id;return c}
 
   /* ---------- jednotná sada ikon (čárové, v barvě textu) ---------- */
@@ -603,6 +609,10 @@ input,select{font-size:16px;min-height:46px}
     $('statsbody').innerHTML=h;
   }
 
+  function isMine(r){
+    if(r.uid)return r.uid===uid;
+    var n=store('name');return !!(n&&slug(r.name)===slug(n));   // starší hodnocení bez podpisu: pozná se podle jména
+  }
   function card(l,rs,ph,av){
     var d=drafts[l.id]||(drafts[l.id]={name:store('name')||'',stars:0,text:''});
     ph=ph.slice().sort(function(x,y){return (x.created||0)-(y.created||0)});
@@ -623,10 +633,13 @@ input,select{font-size:16px;min-height:46px}
       '<details><summary><span>'+ic('star')+'Hodnotit · '+ic('camera')+'fotky'+(ph.length>1?' ('+ph.length+')':'')+'</span></summary>'+
       (ph.some(function(p){return p.id})?'<div class="thumbs">'+ph.map(function(p){return p.id?'<div class="th"><img loading="lazy" src="'+esc(photoCache[p.url]||p.url)+'" alt=""><button class="px" type="button" data-id="'+esc(p.id)+'" aria-label="Smazat fotku">'+ic('x')+'</button></div>':''}).join('')+'</div>':'')+
       rs.map(function(r,i){
-        return '<div class="rt" data-i="'+i+'"><b>'+esc(r.name)+'</b> '+stars(r.stars)+(r.text?' <span>'+esc(r.text)+'</span>':'')+'<button class="x" title="Smazat hodnocení">✕</button></div>'}).join('')+
-      '<div class="fm"><input type="text" class="nm" placeholder="Tvoje jméno" autocomplete="given-name" autocapitalize="words"><div class="pick">'+
+        var mine=isMine(r);
+        return '<div class="rt" data-i="'+i+'"><b>'+esc(r.name)+'</b> '+stars(r.stars)+(r.text?' <span>'+esc(r.text)+'</span>':'')+
+          (r.updated&&r.updated>(r.created||0)+60000?' <span class="meta">(upraveno)</span>':'')+
+          (mine?'<span class="ra"><button class="re" type="button" title="Upravit hodnocení" aria-label="Upravit hodnocení">'+ic('pencil')+'</button><button class="x" type="button" title="Smazat hodnocení" aria-label="Smazat hodnocení">'+ic('x')+'</button></span>':'')+'</div>'}).join('')+
+       '<div class="fm">'+(d.editId?'<div class="editnote">Upravuješ své hodnocení</div>':'')+'<input type="text" class="nm" placeholder="Tvoje jméno" autocomplete="given-name" autocapitalize="words"><div class="pick">'+
       [1,2,3,4,5].map(function(n){return '<button type="button" class="sg" data-n="'+n+'" aria-label="'+n+' z 5">★</button>'}).join('')+
-      '<span class="pv"></span></div><input type="text" class="tx" placeholder="Komentář (nepovinné)"><button class="rate">Uložit hodnocení</button></div>'+
+      '<span class="pv"></span></div><input type="text" class="tx" placeholder="Komentář (nepovinné)"><button class="rate">'+(d.editId?'Uložit změny':'Uložit hodnocení')+'</button>'+(d.editId?'<button class="sec cancel" type="button">Zrušit úpravu</button>':'')+'</div>'+
       '<label class="addph">'+ic('camera')+'Přidat fotky<input type="file" accept="image/*" multiple></label></details>'+
       '<div class="acts"><button class="edit" type="button">'+ic('pencil')+'Upravit</button><button class="del" type="button">Smazat</button></div></div>';
     var det=a.querySelector('details');
@@ -666,14 +679,29 @@ input,select{font-size:16px;min-height:46px}
       var n=d.name.trim();
       if(!n)return msg('Napiš své jméno.');
       if(!d.stars)return msg('Vyber počet hvězdiček.');
-      var rec={lunchId:l.id,name:n,stars:d.stars,text:d.text.trim(),created:Date.now()};
-      d.stars=0;d.text='';
-      try{await mutate(function(x){x.ratings[l.id+'_'+slug(n)]=rec});msg('Hodnocení uloženo ✔')}
-      catch(e){msg('Hodnocení se nepodařilo uložit: '+er(e))}
+      var key=l.id+'_'+uid;
+      var mineOld=rs.filter(function(r){return r.id===d.editId||r.id===key})[0]||rs.filter(function(r){return isMine(r)})[0];
+      var rec={lunchId:l.id,name:n,stars:d.stars,text:d.text.trim(),created:mineOld?mineOld.created||Date.now():Date.now(),uid:uid};
+      if(mineOld)rec.updated=Date.now();
+      var oldId=mineOld?mineOld.id:null,oldSnap=mineOld?strip(mineOld):null;
+      d.stars=0;d.text='';d.editId=null;
+      try{
+        await mutate(function(x){if(oldId&&oldId!==key)delete x.ratings[oldId];x.ratings[key]=rec});
+        if(mineOld)showUndo('Hodnocení upraveno.',function(){return mutate(function(x){if(oldId!==key)delete x.ratings[key];x.ratings[oldId]=oldSnap})});
+        else msg('Hodnocení uloženo ✔');
+      }catch(e){msg('Hodnocení se nepodařilo uložit: '+er(e))}
     };
+    [].forEach.call(a.querySelectorAll('.rt .re'),function(b){
+      b.onclick=function(){
+        var r=rs[+b.closest('.rt').dataset.i];if(!r)return;
+        d.name=r.name;d.stars=r.stars;d.text=r.text||'';d.editId=r.id;openIds[l.id]=true;render();
+      };
+    });
+    var cn=a.querySelector('.cancel');
+    if(cn)cn.onclick=function(){d.stars=0;d.text='';d.editId=null;render()};
     [].forEach.call(a.querySelectorAll('.rt .x'),function(b){
       b.onclick=async function(){
-        var r=rs[+b.parentNode.dataset.i];if(!r)return;
+        var r=rs[+b.closest('.rt').dataset.i];if(!r||!isMine(r))return;
         var snap=strip(r);
         try{
           await mutate(function(x){delete x.ratings[r.id]});
