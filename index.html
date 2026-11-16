@@ -227,6 +227,16 @@ button,summary,label,.item{touch-action:manipulation}
 input,select{font-size:16px;min-height:46px}
 .mrow input[type=checkbox]{min-height:0;width:24px;height:24px}
 }
+.news{background:color-mix(in srgb,var(--ac) 8%,var(--card));border:1px solid color-mix(in srgb,var(--ac) 30%,var(--bd));border-radius:var(--r);padding:14px 16px 16px;margin-bottom:14px;box-shadow:var(--sh)}
+.news[hidden]{display:none}
+.nh{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.nt{display:flex;align-items:center;gap:8px;color:var(--ac);font-size:1rem}
+.nt .i{margin:0;width:20px;height:20px}
+.ns{font-size:.88rem;color:var(--mut);margin:4px 0 8px}
+.nl{font-size:.9rem;margin:6px 0;display:flex;gap:6px;align-items:baseline;flex-wrap:wrap}
+.nl b{white-space:nowrap}
+.newtag{display:inline-block;font-size:.7rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ac);margin-bottom:4px}
+.item.fresh{box-shadow:0 0 0 2px var(--ac),var(--sh)}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 
@@ -238,6 +248,13 @@ input,select{font-size:16px;min-height:46px}
   <div class="brand"><div class="logo"><i data-i="utensils"></i></div><div><h1>Naše obědy</h1><p class="sub">Vyhledej jídlo, přidej fotku a hodnocení.</p></div></div>
   <button id="theme" class="ico" type="button" aria-label="Přepnout světlý a tmavý režim" title="Světlý / tmavý režim"></button>
 </header>
+
+<section id="news" class="news" hidden>
+  <div class="nh"><span class="nt"><i data-i="bell"></i><b>Co je nového</b></span><button id="newsx" class="ico sm" type="button" aria-label="Zavřít"><i data-i="x"></i></button></div>
+  <div class="ns" id="newssum"></div>
+  <div id="newsbody"></div>
+  <div class="btns"><button id="newsshow" type="button">Zobrazit nové</button></div>
+</section>
 
 <section class="tools">
   <div class="searchrow">
@@ -349,6 +366,7 @@ input,select{font-size:16px;min-height:46px}
     upload:'<path d="M12 21V9M7 14l5-5 5 5M4 3h16"/>',
     clipboard:'<rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4V3h6v1M9 11h6M9 15h6"/>',
     pencil:'<path d="M17 3a2.8 2.8 0 0 1 4 4L8 20l-5 1 1-5z"/>',
+    bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
     chevl:'<path d="m15 18-6-6 6-6"/>',
     chevr:'<path d="m9 18 6-6-6-6"/>',
     scan:'<path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/>'
@@ -443,7 +461,7 @@ input,select{font-size:16px;min-height:46px}
 
   /* ---------- data a synchronizace ---------- */
   var data={lunches:{},ratings:{},photos:{}}, sha=null, pend=0;
-  var lunches=[], ratings=[], photos=[], drafts={}, openIds={}, supF='', photoCache={}, pending=false, loaded=false;
+  var lunches=[], ratings=[], photos=[], drafts={}, openIds={}, supF='', photoCache={}, pending=false, loaded=false, dataOk=false, fresh={};
   function norm3(d){['lunches','ratings','photos'].forEach(function(n){d[n]=d[n]||{}});return d}
   function arr(o){return Object.keys(o||{}).map(function(id){return Object.assign({id:id},o[id])})}
   function fire(){lunches=arr(data.lunches);ratings=arr(data.ratings);photos=arr(data.photos);render()}
@@ -492,12 +510,14 @@ input,select{font-size:16px;min-height:46px}
       fire();throw e;
     }finally{pend--}
   }
-  async function poll(){
+  async function poll(thenNews){
     if(!PROXY_URL||document.hidden||pend>0)return;
     try{var c=await srvRead(sha);if(c&&pend===0){data=c.d;sha=c.sha;fire()}}catch(e){}
+    if(thenNews)computeNews();
   }
   setInterval(poll,20000);
-  document.addEventListener('visibilitychange',function(){if(!document.hidden)poll()});
+  document.addEventListener('visibilitychange',function(){if(document.hidden)saveSeen();else poll(true)});
+  window.addEventListener('pagehide',saveSeen);
 
   /* ---------- fotky ---------- */
   function compress(file,max,q){
@@ -524,7 +544,7 @@ input,select{font-size:16px;min-height:46px}
   }
   async function addPhoto(lid,f){
     var up=await uploadPhoto(f);
-    await mutate(function(d){d.photos[up.id]={lunchId:lid,url:up.url,created:Date.now()}});
+    await mutate(function(d){d.photos[up.id]={lunchId:lid,url:up.url,created:Date.now(),uid:uid}});
   }
 
   /* ---------- vrácení smazání ---------- */
@@ -563,16 +583,16 @@ input,select{font-size:16px;min-height:46px}
       return true;
     });
     var cnt={'':base.length};
-    base.forEach(function(l){var k=l.supplier||'-';cnt[k]=(cnt[k]||0)+1});
+    base.forEach(function(l){var k=l.supplier||'-';cnt[k]=(cnt[k]||0)+1;if(fresh[l.id])cnt['#new']=(cnt['#new']||0)+1});
     var ch=$('chips');ch.innerHTML='';
-    [['','Všichni'],['Soused','Soused'],['Hlaváček','Hlaváček'],['Karl','Karl'],['Zelená','Zelená'],['-','Bez dodavatele']].forEach(function(c){
-      if(c[0]==='-'&&!cnt['-'])return;
+    [['','Všichni'],['#new','Nové'],['Soused','Soused'],['Hlaváček','Hlaváček'],['Karl','Karl'],['Zelená','Zelená'],['-','Bez dodavatele']].forEach(function(c){
+      if((c[0]==='-'||c[0]==='#new')&&!cnt[c[0]])return;
       var b=document.createElement('button');b.type='button';b.className=supF===c[0]?'on':'';
       b.innerHTML=(SK[c[0]]?'<span class="dot s-'+SK[c[0]]+'"></span>':'')+esc(c[1])+' <span class="cn">'+(cnt[c[0]]||0)+'</span>';
       b.onclick=function(){supF=c[0];render()};
       ch.appendChild(b);
     });
-    var arr2=base.filter(function(l){return !supF||(supF==='-'?!l.supplier:l.supplier===supF)});
+    var arr2=base.filter(function(l){if(!supF)return true;if(supF==='#new')return !!fresh[l.id];if(supF==='-')return !l.supplier;return l.supplier===supF});
     var s=$('sort').value;
     arr2.sort(function(a,b){
       if(s==='best')return avg(b)-avg(a)||(b.date||'').localeCompare(a.date||'');
@@ -619,7 +639,8 @@ input,select{font-size:16px;min-height:46px}
     if(l.photo)ph=[{url:l.photo}].concat(ph);
     var urls=ph.map(function(p){return photoCache[p.url]||p.url});
     var key=SK[l.supplier]||'';
-    var a=document.createElement('article');a.className='item'+(key?' s-'+key:'');
+    var fr=fresh[l.id];
+    var a=document.createElement('article');a.className='item'+(key?' s-'+key:'')+(fr?' fresh':'');
     var meta=[l.date,l.supplier?l.code:(l.code||l.place)].filter(Boolean).map(esc).join(' · ');
     rs.sort(function(x,y){return (y.created||0)-(x.created||0)});
     var soup=/^Pol[eé]v/i.test(l.code||'')||/pol[eé]vk|vývar|kaldoun/i.test(l.name);
@@ -628,7 +649,7 @@ input,select{font-size:16px;min-height:46px}
       (l.supplier?'<span class="pill tl"><i class="dot s-'+key+'"></i>'+esc(l.supplier)+'</span>':'')+
       (rs.length?'<span class="pill tr"><span class="star">★</span>'+fmt(av)+'</span>':'')+
       (l.price?'<span class="pill br">'+esc(l.price)+'</span>':'')+'</div>'+
-      '<div class="cb"><h3>'+esc(l.name)+'</h3><div class="meta">'+meta+'</div>'+
+      '<div class="cb">'+(fr?'<div class="newtag">'+(fr.l?'Nové jídlo':(fr.r&&fr.p?'Nové hodnocení a fotky':(fr.r?'Nové hodnocení':'Nové fotky')))+'</div>':'')+'<h3>'+esc(l.name)+'</h3><div class="meta">'+meta+'</div>'+
       (rs.length?'<div class="avg">'+stars(av)+' <span class="meta">'+rs.length+'×</span></div>':'')+
       '<details><summary><span>'+ic('star')+'Hodnotit · '+ic('camera')+'fotky'+(ph.length>1?' ('+ph.length+')':'')+'</span></summary>'+
       (ph.some(function(p){return p.id})?'<div class="thumbs">'+ph.map(function(p){return p.id?'<div class="th"><img loading="lazy" src="'+esc(photoCache[p.url]||p.url)+'" alt=""><button class="px" type="button" data-id="'+esc(p.id)+'" aria-label="Smazat fotku">'+ic('x')+'</button></div>':''}).join('')+'</div>':'')+
@@ -731,6 +752,50 @@ input,select{font-size:16px;min-height:46px}
     return a;
   }
 
+  /* ---------- co je nového od posledního otevření ---------- */
+  function cz(n,a,b,c){return n+' '+(n===1?a:(n>=2&&n<=4?b:c))}
+  function saveSeen(){
+    if(!dataOk)return;
+    var o={l:{},r:{},p:{}};
+    lunches.forEach(function(l){o.l[l.id]=1});
+    ratings.forEach(function(r){o.r[r.id]=r.updated||r.created||1});
+    photos.forEach(function(p){o.p[p.id]=1});
+    store('obedySeen',JSON.stringify(o));
+  }
+  function computeNews(){
+    if(!dataOk||!$('news').hidden)return;
+    var raw=store('obedySeen');
+    if(!raw){saveSeen();return}
+    var seen;try{seen=JSON.parse(raw)||{}}catch(e){saveSeen();return}
+    seen.l=seen.l||{};seen.r=seen.r||{};seen.p=seen.p||{};
+    var byId={};lunches.forEach(function(l){byId[l.id]=l});
+    var L=lunches.filter(function(l){return !seen.l[l.id]&&l.uid!==uid});
+    var R=ratings.filter(function(r){var v=r.updated||r.created||1;return byId[r.lunchId]&&(seen.r[r.id]==null||seen.r[r.id]<v)&&!isMine(r)});
+    var P=photos.filter(function(p){return byId[p.lunchId]&&!seen.p[p.id]&&p.uid!==uid});
+    if(!L.length&&!R.length&&!P.length){saveSeen();return}
+    fresh={};
+    L.forEach(function(l){fresh[l.id]={l:1,r:0,p:0}});
+    R.forEach(function(r){var f=fresh[r.lunchId]=fresh[r.lunchId]||{l:0,r:0,p:0};f.r++});
+    P.forEach(function(p){var f=fresh[p.lunchId]=fresh[p.lunchId]||{l:0,r:0,p:0};f.p++});
+    var lines=[];
+    L.forEach(function(l){lines.push('<div class="nl"><b>Nové jídlo</b> '+esc(l.name)+(l.supplier?' <span class="meta">· '+esc(l.supplier)+'</span>':'')+'</div>')});
+    R.forEach(function(r){
+      lines.push('<div class="nl"><b>'+(seen.r[r.id]!=null?'Upraveno':'Hodnocení')+'</b> '+stars(r.stars)+' '+esc(r.name)+' <span class="meta">· '+esc(byId[r.lunchId].name)+'</span>'+(r.text?' <span class="meta">„'+esc(r.text)+'“</span>':'')+'</div>');
+    });
+    var pp={};P.forEach(function(p){pp[p.lunchId]=(pp[p.lunchId]||0)+1});
+    Object.keys(pp).forEach(function(id){lines.push('<div class="nl"><b>'+cz(pp[id],'nová fotka','nové fotky','nových fotek')+'</b> <span class="meta">· '+esc(byId[id].name)+'</span></div>')});
+    var parts=[];
+    if(L.length)parts.push(cz(L.length,'nové jídlo','nová jídla','nových jídel'));
+    if(R.length)parts.push(cz(R.length,'nové hodnocení','nová hodnocení','nových hodnocení'));
+    if(P.length)parts.push(cz(P.length,'nová fotka','nové fotky','nových fotek'));
+    $('newssum').textContent='Od posledního otevření přibylo: '+parts.join(' · ');
+    $('newsbody').innerHTML=lines.slice(0,6).join('')+(lines.length>6?'<div class="nl meta">… a dalších '+(lines.length-6)+' změn</div>':'');
+    $('news').hidden=false;
+    render();
+  }
+  $('newsx').onclick=function(){$('news').hidden=true;fresh={};if(supF==='#new')supF='';saveSeen();render()};
+  $('newsshow').onclick=function(){supF='#new';$('news').hidden=true;render();window.scrollTo({top:0,behavior:'smooth'})};
+
   /* ---------- přidávání jídel ---------- */
   async function addLunches(items,date){
     var have={};lunches.forEach(function(l){var k=norm(l.name);(have[k]=have[k]||[]).push(l)});
@@ -746,7 +811,7 @@ input,select{font-size:16px;min-height:46px}
       }else if(old){ids.push(null)}
       else{
         added++;var id=newId();ids.push(id);
-        var rec={name:x.name,price:x.price||'',code:x.code||'',supplier:x.supplier||'',date:date,created:Date.now()};
+        var rec={name:x.name,price:x.price||'',code:x.code||'',supplier:x.supplier||'',date:date,created:Date.now(),uid:uid};
         plan.push(['a',id,rec]);(have[k]=have[k]||[]).push(Object.assign({},rec));
       }
     });
@@ -974,9 +1039,9 @@ input,select{font-size:16px;min-height:46px}
 
   /* ---------- start ---------- */
   async function init(){
-    if(!PROXY_URL){data=localLoad();loaded=true;fire();$('fstat').textContent='Lokální režim – data jsou jen v tomto prohlížeči.';return}
+    if(!PROXY_URL){data=localLoad();loaded=true;dataOk=true;fire();computeNews();$('fstat').textContent='Lokální režim – data jsou jen v tomto prohlížeči.';return}
     try{
-      var c=await srvRead();data=c.d;sha=c.sha;loaded=true;fire();
+      var c=await srvRead();data=c.d;sha=c.sha;loaded=true;dataOk=true;fire();computeNews();
       $('fstat').textContent='Sdílená data ✔ změny vidí všichni';
     }catch(e){loaded=true;fire();msg('Data se nepodařilo načíst: '+er(e),true);$('fstat').textContent='Data se nepodařilo načíst.'}
   }
