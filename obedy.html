@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#d9602b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Obědy">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+<link rel="icon" href="icon-192.png?v=2">
+<title>Naše obědy</title>
+<script>try{var __t=localStorage.getItem("theme");if(__t)document.documentElement.setAttribute("data-theme",__t)}catch(e){}</script>
+<style>
+:root{--bg:#f7f4ef;--card:#fff;--soft:#f3eee6;--tx:#221f1b;--mut:#766e64;--ac:#e2562a;--ac2:#ff8a4c;--acx:#c8431b;--onac:#fff;--bd:#e8e1d6;--st:#f0a50c;
+--sh:0 1px 2px rgba(50,35,20,.05),0 10px 30px -10px rgba(50,35,20,.14);--sh2:0 2px 4px rgba(50,35,20,.06),0 22px 44px -12px rgba(50,35,20,.26);
+--c-s:#2563eb;--c-h:#16a34a;--c-k:#9333ea;--c-z:#0d9488;--r:22px;
+color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12100e;--card:#1c1916;--soft:#25211c;--tx:#f5f0e9;--mut:#a79e93;--ac:#ff7a45;--ac2:#ffb067;--acx:#ff9460;--onac:#1a0d05;--bd:#302b25;--st:#ffc23d;--sh:0 1px 2px rgba(0,0,0,.5),0 14px 34px -10px rgba(0,0,0,.65);--sh2:0 2px 4px rgba(0,0,0,.5),0 24px 48px -12px rgba(0,0,0,.8);--c-s:#7fb0ff;--c-h:#58e08a;--c-k:#cd97ff;--c-z:#3ddbc8;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12100e;--card:#1c1916;--soft:#25211c;--tx:#f5f0e9;--mut:#a79e93;--ac:#ff7a45;--ac2:#ffb067;--acx:#ff9460;--onac:#1a0d05;--bd:#302b25;--st:#ffc23d;--sh:0 1px 2px rgba(0,0,0,.5),0 14px 34px -10px rgba(0,0,0,.65);--sh2:0 2px 4px rgba(0,0,0,.5),0 24px 48px -12px rgba(0,0,0,.8);--c-s:#7fb0ff;--c-h:#58e08a;--c-k:#cd97ff;--c-z:#3ddbc8;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;color:var(--tx);font:16px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased;
+background:radial-gradient(900px 420px at 90% -80px,color-mix(in srgb,var(--ac) 16%,transparent),transparent 70%),radial-gradient(700px 380px at -10% 0,color-mix(in srgb,var(--c-z) 10%,transparent),transparent 70%),var(--bg);background-repeat:no-repeat;transition:background-color .2s,color .2s}
+body.noscroll{overflow:hidden}
+main{max-width:1080px;margin:0 auto;padding:20px 16px 120px}
+button,input,select{font:inherit}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.logo{flex:0 0 auto;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:var(--ac);background:color-mix(in srgb,var(--ac) 11%,transparent);border:1px solid color-mix(in srgb,var(--ac) 20%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.logo .i{width:22px;height:22px;margin:0}
+.i{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.2em;margin-right:.4em;flex:0 0 auto}
+i[data-i]{display:inline-flex;font-style:normal}
+.ico .i,.fab .i,.empty .big .i{margin:0}
+.ico .i{width:20px;height:20px}
+h1{margin:0;font-size:clamp(1.35rem,4vw,1.8rem);letter-spacing:-.03em;line-height:1.15;font-weight:750}
+.sub{margin:2px 0 0;color:var(--mut);font-size:.9rem}
+.ico{flex:0 0 auto;display:grid;place-items:center;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:14px;width:44px;height:44px;padding:0;font-size:1.15rem;box-shadow:var(--sh);cursor:pointer;position:relative}
+.ico.sm{width:42px;height:42px}
+.ico:hover{background:var(--soft)}
+.ico.act::after{content:'';position:absolute;top:7px;right:7px;width:9px;height:9px;border-radius:50%;background:var(--ac);border:2px solid var(--card)}
+.tools{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;margin:0 -16px 14px;padding:10px 16px 6px;background:color-mix(in srgb,var(--bg) 78%,transparent);-webkit-backdrop-filter:saturate(1.5) blur(16px);backdrop-filter:saturate(1.5) blur(16px)}
+.searchrow{display:grid;grid-template-columns:1fr auto auto;gap:8px}
+.sbox{position:relative}
+.sbox .i{position:absolute;left:14px;top:50%;transform:translateY(-50%);margin:0;color:var(--mut);pointer-events:none}
+.sbox input[type=search]{padding-left:42px}
+.searchrow select{width:auto;max-width:150px}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:10px -16px 0;padding:2px 16px 6px}
+.chips::-webkit-scrollbar{display:none}
+.chips button{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:999px;padding:7px 14px;font-weight:600;font-size:.9rem;box-shadow:none}
+.chips button:hover{background:var(--soft)}
+.chips button .cn{color:var(--mut);font-weight:600}
+.chips button.on{background:var(--tx);color:var(--bg);border-color:var(--tx)}
+.chips button.on .cn{color:inherit;opacity:.7}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--c,var(--ac))}
+.bar2{display:grid;grid-template-columns:1fr 120px 120px;gap:8px;margin-top:8px}
+.bar2[hidden]{display:none}
+input[type=text],input[type=password],input[type=date],input[type=search],input[type=number],select{width:100%;padding:11px 14px;border:1px solid var(--bd);border-radius:14px;background:var(--card);color:var(--tx);box-shadow:var(--sh)}
+input:focus-visible,select:focus-visible{outline:none;border-color:var(--ac);box-shadow:0 0 0 4px color-mix(in srgb,var(--ac) 22%,transparent)}
+button:focus-visible,summary:focus-visible,.addph:focus-within{outline:2px solid var(--ac);outline-offset:2px}
+label{font-size:.8rem;color:var(--mut);display:block;margin-bottom:5px;font-weight:600}
+button{background:var(--ac);color:var(--onac);border:0;border-radius:14px;padding:11px 18px;font-weight:650;cursor:pointer;transition:transform .08s,background .15s,box-shadow .15s;box-shadow:0 6px 16px -6px color-mix(in srgb,var(--ac) 70%,transparent)}
+button:hover{background:var(--acx)}
+button:active{transform:scale(.97)}
+button.sec{background:var(--card);color:var(--tx);border:1px solid var(--bd);box-shadow:none}
+button.sec:hover{background:var(--soft)}
+button:disabled{opacity:.45;cursor:default;box-shadow:none}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.box{background:var(--card);border:1px solid color-mix(in srgb,var(--bd) 70%,transparent);border-radius:var(--r);padding:4px 18px;margin-bottom:16px;box-shadow:var(--sh)}
+.box>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:14px 0;font-weight:700}
+.box>summary::-webkit-details-marker{display:none}
+.box>summary::after{content:'›';font-size:1.5rem;line-height:1;color:var(--mut);transition:transform .2s}
+.box[open]>summary::after{transform:rotate(90deg)}
+.box[open]{padding-bottom:16px}
+.row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:14px}
+.row .full{grid-column:1/-1}
+.meta{color:var(--mut);font-size:.85rem}
+/* karty */
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px;align-items:start}
+.item{--c:var(--ac);background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);border:1px solid color-mix(in srgb,var(--bd) 60%,transparent);transition:transform .2s,box-shadow .2s}
+.item:hover{transform:translateY(-3px);box-shadow:var(--sh2)}
+.s-s{--c:var(--c-s)}.s-h{--c:var(--c-h)}.s-k{--c:var(--c-k)}.s-z{--c:var(--c-z)}
+.cph{position:relative;aspect-ratio:4/3;overflow:hidden;display:grid;place-items:center;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 34%,var(--card)),color-mix(in srgb,var(--c) 8%,var(--card)))}
+.cph .emo{display:grid;color:var(--c);opacity:.55}
+.cph .emo .i{width:58px;height:58px;stroke-width:1.3;margin:0}
+.cph .gal{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.cph .gal::-webkit-scrollbar{display:none}
+.cph .gal img{position:static;flex:0 0 100%;width:100%;height:100%;scroll-snap-align:center;object-fit:cover;cursor:zoom-in;transform:none!important}
+.pill.bl{bottom:10px;left:10px}
+.thumbs{display:flex;gap:8px;overflow-x:auto;margin-top:12px;padding:2px 2px 4px}
+.th{position:relative;flex:0 0 88px;height:88px;border-radius:14px;overflow:hidden;background:var(--soft)}
+.th img{width:100%;height:100%;object-fit:cover;display:block}
+.px{position:absolute;top:3px;right:3px;width:40px;height:40px;padding:0;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;box-shadow:none;display:grid;place-items:center}
+.px:hover{background:rgba(0,0,0,.8)}
+.px .i{width:15px;height:15px;margin:0}
+.cph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in;transition:transform .4s}
+.item:hover .cph img{transform:scale(1.04)}
+.cph.has::after{content:'';position:absolute;inset:auto 0 0 0;height:42%;background:linear-gradient(transparent,rgba(0,0,0,.38));pointer-events:none}
+.pill{position:absolute;z-index:1;pointer-events:none;display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;padding:5px 11px;border-radius:999px;color:var(--tx);background:color-mix(in srgb,var(--card) 80%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid color-mix(in srgb,var(--bd) 60%,transparent);font-variant-numeric:tabular-nums}
+.pill.tl{top:10px;left:10px}.pill.tr{top:10px;right:10px}.pill.br{bottom:10px;right:10px}
+.pill .dot{width:8px;height:8px}
+.cb{padding:14px 16px 16px}
+.cb h3{margin:0 0 3px;font-size:1.04rem;line-height:1.3;font-weight:700;letter-spacing:-.01em;overflow-wrap:anywhere}
+.cb .avg{margin:6px 0 0;font-size:.95rem}
+.star{color:var(--st);letter-spacing:1px}
+.stars{white-space:nowrap;letter-spacing:1px}
+.sg,.pick button.sg,.pick button.sg:hover{background:linear-gradient(90deg,var(--st) var(--f,0%),color-mix(in srgb,var(--mut) 28%,transparent) var(--f,0%));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.cb details{margin-top:12px}
+.cb details>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;border-radius:14px;background:var(--soft);font-weight:650;font-size:.88rem}
+.cb details>summary::-webkit-details-marker{display:none}
+.cb details>summary::after{content:'›';font-size:1.3rem;line-height:1;color:var(--mut);transition:transform .2s}
+.cb details[open]>summary::after{transform:rotate(90deg)}
+.cb details>summary:hover{background:color-mix(in srgb,var(--soft) 70%,var(--bd))}
+.rt{font-size:.9rem;margin:10px 0 0;display:flex;gap:6px;align-items:baseline;flex-wrap:wrap}
+.rt .ra{margin-left:auto;display:flex;gap:0}
+.rt .x,.rt .re{background:none;color:var(--mut);padding:0 7px;font-weight:400;box-shadow:none;border-radius:8px;display:inline-grid;place-items:center;min-height:30px}
+.rt .x:hover,.rt .re:hover{background:none;color:var(--tx)}
+.rt .re .i{width:15px;height:15px;margin:0}
+.editnote{font-size:.82rem;font-weight:650;color:var(--ac);margin-bottom:8px}
+.fm .sec{margin-top:8px}
+.pick{display:flex;gap:2px;margin:8px 0}
+.pick{align-items:center}
+.pick button{font-size:1.9rem;padding:0 3px;line-height:1;box-shadow:none;transition:transform .12s}
+.pick button:hover{transform:scale(1.12)}
+.pick .pv{margin-left:10px;font-weight:700;font-size:1rem;color:var(--tx);min-width:2.2em;font-variant-numeric:tabular-nums}
+.fm{margin-top:12px}
+.fm input[type=text]{margin-bottom:8px;box-shadow:none;padding:9px 12px}
+.addph{display:inline-flex;align-items:center;gap:6px;margin-top:12px;border:1px dashed var(--bd);border-radius:14px;padding:9px 14px;cursor:pointer;font-size:.88rem;color:var(--mut);font-weight:600;margin-bottom:0}
+.addph input{display:none}
+.addph:hover{border-color:var(--ac);color:var(--tx)}
+.acts{display:flex;gap:18px;align-items:center;margin-top:8px}
+.edit,.del{background:none;color:var(--mut);padding:0;font-weight:600;font-size:.82rem;box-shadow:none;display:inline-flex;align-items:center;min-height:40px}
+.edit:hover,.del:hover{background:none;color:var(--tx)}
+.edit .i{width:15px;height:15px;margin-right:6px}
+.del{text-decoration:underline;font-weight:500}
+.sk{height:310px;border-radius:var(--r);background:linear-gradient(100deg,var(--soft) 30%,color-mix(in srgb,var(--soft) 55%,var(--card)) 50%,var(--soft) 70%);background-size:220% 100%;animation:shim 1.3s linear infinite}
+@keyframes shim{to{background-position:-220% 0}}
+.empty{color:var(--mut);text-align:center;padding:48px 0;display:grid;gap:12px;justify-items:center}
+.empty[hidden]{display:none}
+.empty .big{color:var(--mut);opacity:.7}
+.empty .big .i{width:56px;height:56px;stroke-width:1.3}
+/* přehled */
+.h2{font-size:.76rem;color:var(--mut);text-transform:uppercase;letter-spacing:.08em;margin:18px 0 6px;font-weight:700}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:4px 0}
+.stat{background:var(--soft);border-radius:16px;padding:12px 8px;text-align:center;font-size:.8rem;color:var(--mut);font-weight:600}
+.stat b{display:block;font-size:1.7rem;color:var(--tx);letter-spacing:-.02em}
+.rank{display:flex;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--bd);font-size:.92rem}
+.rank:first-of-type{border-top:0}
+.rank .n{width:1.8em;display:grid;place-items:center}
+.medal{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;font-size:.78rem;font-weight:800;background:color-mix(in srgb,var(--mut) 14%,transparent);color:var(--mut)}
+.medal.m1{background:color-mix(in srgb,var(--st) 22%,transparent);color:var(--st)}
+.medal.m2{background:color-mix(in srgb,#94a3b8 24%,transparent);color:#94a3b8}
+.medal.m3{background:color-mix(in srgb,#c2773a 24%,transparent);color:#c2773a}
+.rank .t{flex:1;min-width:0;overflow-wrap:anywhere;font-weight:600}
+.bar-s{display:flex;align-items:center;gap:10px;margin:9px 0;font-size:.9rem}
+.bar-s .nm{width:84px;font-weight:700;color:var(--c)}
+.bar-s .tr{flex:1;height:12px;background:var(--soft);border-radius:8px;overflow:hidden}
+.bar-s .fl{height:100%;border-radius:8px;background:linear-gradient(90deg,color-mix(in srgb,var(--c) 70%,transparent),var(--c))}
+.foot{margin-top:28px;color:var(--mut)}
+.foot .box{box-shadow:none;background:transparent;border-style:dashed;padding:14px 18px}
+#fstat{font-size:.85rem;color:var(--mut)}
+/* přidávací panel */
+.fab{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:25;width:56px;height:56px;border-radius:18px;padding:0;display:grid;place-items:center;background:var(--ac);color:var(--onac);box-shadow:0 10px 24px -10px color-mix(in srgb,var(--ac) 60%,transparent)}
+.fab .i{width:26px;height:26px;stroke-width:2.2}
+body.sheet-open .fab{display:none}
+.sheet{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center}
+.sheet[hidden]{display:none}
+.shbg{position:absolute;inset:0;background:rgba(10,8,6,.5);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:fade .2s}
+.shcard{position:relative;width:min(680px,100%);max-height:92vh;overflow:auto;background:var(--card);border-radius:28px 28px 0 0;padding:18px 18px calc(22px + env(safe-area-inset-bottom,0px));box-shadow:var(--sh2);animation:up .25s cubic-bezier(.2,.8,.2,1)}
+.shhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.shhead h2{margin:0;font-size:1.25rem;letter-spacing:-.02em}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+@keyframes fade{from{opacity:0}}
+@media(min-width:700px){.sheet{align-items:center}.shcard{border-radius:28px}}
+/* hlášky */
+#toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom,0px));z-index:60;display:flex;flex-direction:column;gap:8px;align-items:center;width:min(560px,calc(100vw - 24px));pointer-events:none}
+body.sheet-open #toasts{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+#msg,#undo{pointer-events:auto;background:var(--tx);color:var(--bg);border-radius:16px;padding:11px 16px;font-size:.9rem;font-weight:600;box-shadow:var(--sh2);max-width:100%;animation:up .2s}
+#msg:empty{display:none}
+#undo{display:flex;align-items:center;gap:12px}
+#undo[hidden]{display:none}
+#undo button{background:transparent;color:var(--ac2);border:0;padding:4px 8px;box-shadow:none;font-weight:750}
+#undo button:hover{background:color-mix(in srgb,var(--bg) 15%,transparent)}
+#lb{position:fixed;inset:0;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;z-index:70;padding:16px;cursor:zoom-out}
+#lb[hidden]{display:none}
+#lb img{max-width:100%;max-height:100%;border-radius:14px;object-fit:contain}
+.lbn{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;padding:0;border-radius:50%;background:rgba(255,255,255,.16);color:#fff;box-shadow:none;display:grid;place-items:center;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.lbn:hover{background:rgba(255,255,255,.28)}
+.lbn .i{width:24px;height:24px;margin:0}
+.lbn.prev{left:12px}.lbn.next{right:12px}
+.lbn[hidden]{display:none}
+.lbc{position:absolute;bottom:calc(18px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);color:#fff;font-weight:700;font-size:.9rem;background:rgba(0,0,0,.45);padding:5px 12px;border-radius:999px}
+.lbc:empty{display:none}
+@media(max-width:700px){.row{grid-template-columns:1fr 1fr}.list{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}.bar2{grid-template-columns:1fr 1fr}.bar2 select{grid-column:1/-1}}
+@media(max-width:480px){.list{grid-template-columns:1fr}.cph{aspect-ratio:16/10}.sub{display:none}.searchrow select{max-width:142px;padding-inline:10px}}
+html{-webkit-tap-highlight-color:transparent}
+button,summary,label,.item{touch-action:manipulation}
+.tools{transition:transform .25s ease}
+.tools.hide{transform:translateY(-120%)}
+.shcard{overscroll-behavior:contain}
+@media(max-width:700px){
+.pick{gap:0;margin:4px -4px}
+.pick button{font-size:2.6rem;padding:2px 4px;min-height:52px;min-width:52px}
+.rt .x,.rt .re{min-width:44px;min-height:44px}
+.rt .ra{margin:-12px -8px -12px auto}
+.del{padding:14px 0;font-size:.88rem;min-height:44px}
+.chips button{padding:10px 16px}
+.cb details>summary{padding:14px}
+.addph{padding:13px 16px;min-height:44px}
+.shcard{max-height:92dvh}
+.btns button{min-height:46px}
+input,select{font-size:16px;min-height:46px}
+}
+.news{background:color-mix(in srgb,var(--ac) 8%,var(--card));border:1px solid color-mix(in srgb,var(--ac) 30%,var(--bd));border-radius:var(--r);padding:14px 16px 16px;margin-bottom:14px;box-shadow:var(--sh)}
+.news[hidden]{display:none}
+.nh{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.nt{display:flex;align-items:center;gap:8px;color:var(--ac);font-size:1rem}
+.nt .i{margin:0;width:20px;height:20px}
+.ns{font-size:.88rem;color:var(--mut);margin:4px 0 8px}
+.nl{font-size:.9rem;margin:6px 0;display:flex;gap:6px;align-items:baseline;flex-wrap:wrap}
+.nl b{white-space:nowrap}
+.newtag{display:inline-block;font-size:.7rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ac);margin-bottom:4px}
+.item.fresh{box-shadow:0 0 0 2px var(--ac),var(--sh)}
+.pages{display:flex;gap:4px;background:var(--soft);border-radius:16px;padding:4px;margin-bottom:10px}
+.pages button{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;background:transparent;color:var(--mut);box-shadow:none;border-radius:12px;padding:10px 8px;min-height:44px;font-weight:750;position:relative}
+.pages button:hover{background:transparent;color:var(--tx)}
+.pages button.on{background:var(--card);color:var(--tx);box-shadow:var(--sh)}
+.pages .cn{font-size:.78rem;color:var(--mut);font-weight:600}
+.pages .nd{position:absolute;top:8px;right:10px;width:8px;height:8px;border-radius:50%;background:var(--ac)}
+.chips[hidden]{display:none}
+.secpick{margin-bottom:12px}
+.hbtns{display:flex;gap:8px}
+.bbadge{position:absolute;top:-5px;right:-5px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--ac);color:var(--onac);font-size:.72rem;font-weight:800;display:grid;place-items:center;border:2px solid var(--bg);font-variant-numeric:tabular-nums}
+.bbadge[hidden]{display:none}
+.hh{display:flex;gap:8px;align-items:center}
+.nitem{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;padding:12px 10px;margin:0 -10px;border-top:1px solid var(--bd);cursor:pointer;border-radius:12px}
+.nitem:first-of-type{border-top:0}
+.nitem:hover{background:var(--soft)}
+.nitem .nb{font-size:.92rem;display:flex;gap:6px;flex-wrap:wrap;align-items:baseline;min-width:0}
+.nitem .nb b{white-space:nowrap}
+.nitem.unread{background:color-mix(in srgb,var(--ac) 8%,transparent);box-shadow:inset 3px 0 0 var(--ac)}
+.nitem.gone{opacity:.55;cursor:default}
+.nitem .tm{white-space:nowrap;font-size:.8rem;color:var(--mut);font-variant-numeric:tabular-nums}
+.empty2{color:var(--mut);text-align:center;padding:30px 0}
+.item.flash{animation:flash 2.4s ease-out}
+@keyframes flash{0%,55%{box-shadow:0 0 0 3px var(--ac),var(--sh2)}100%{box-shadow:var(--sh)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+
+</head>
+<body>
+<div id="lb" hidden><img alt=""><button id="lbp" class="lbn prev" type="button" aria-label="Předchozí" hidden><i data-i="chevl"></i></button><button id="lbn" class="lbn next" type="button" aria-label="Další" hidden><i data-i="chevr"></i></button><span id="lbc" class="lbc"></span></div>
+<main>
+<header class="top">
+  <div class="brand"><div class="logo"><i data-i="utensils"></i></div><div><h1>Naše obědy</h1><p class="sub">Vyhledej jídlo, přidej fotku a hodnocení.</p></div></div>
+  <div class="hbtns"><button id="bell" class="ico" type="button" aria-label="Oznámení" title="Oznámení"><i data-i="bell"></i><span id="bellb" class="bbadge" hidden></span></button><button id="theme" class="ico" type="button" aria-label="Přepnout světlý a tmavý režim" title="Světlý / tmavý režim"></button></div>
+</header>
+
+<section id="news" class="news" hidden>
+  <div class="nh"><span class="nt"><i data-i="bell"></i><b>Co je nového</b></span><button id="newsx" class="ico sm" type="button" aria-label="Zavřít"><i data-i="x"></i></button></div>
+  <div class="ns" id="newssum"></div>
+  <div id="newsbody"></div>
+  <div class="btns"><button id="newsshow" type="button">Zobrazit nové</button></div>
+</section>
+
+<section class="tools">
+  <nav class="pages" id="pages" aria-label="Sekce"></nav>
+  <div class="searchrow">
+    <div class="sbox"><i data-i="search"></i><input type="search" id="q" placeholder="Hledat jídlo…" aria-label="Hledat jídlo" enterkeyhint="search" autocomplete="off"></div>
+    <select id="sort" aria-label="Řazení"><option value="new">Nejnovější</option><option value="best">Nejlépe hodnocené</option><option value="az">Podle abecedy</option></select>
+    <button id="ftog" class="ico sm" type="button" aria-label="Filtry" title="Filtry"><i data-i="sliders"></i></button>
+  </div>
+  <div class="chips" id="chips"></div>
+  <div class="bar2" id="bar2" hidden>
+    <select id="ff" aria-label="Filtr"><option value="">Všechna jídla</option><option value="unrated">Bez hodnocení</option><option value="rated">S hodnocením</option><option value="photo">S fotkou</option><option value="nophoto">Bez fotky</option></select>
+    <input type="number" id="pmin" placeholder="Cena od" inputmode="numeric" min="0">
+    <input type="number" id="pmax" placeholder="Cena do" inputmode="numeric" min="0">
+  </div>
+</section>
+
+<details class="box" id="stats">
+  <summary><span><i data-i="chart"></i><span id="stattitle">Přehled a žebříček</span></span></summary>
+  <div id="statsbody"></div>
+</details>
+
+<section>
+  <div class="list" id="list"></div>
+  <div class="empty" id="empty" hidden><div class="big"><i data-i="utensils"></i></div><div id="emptytx">Zatím tu nejsou žádné obědy.</div><button id="emptyadd" type="button">Přidat první jídlo</button></div>
+</section>
+<footer class="foot">
+  <div class="box">
+    <div id="fstat"></div>
+    <div class="btns">
+      <button id="fexp" class="sec" type="button"><i data-i="download"></i>Stáhnout zálohu</button>
+      <label class="addph" id="fimpl" style="margin-top:0"><i data-i="upload"></i>Načíst zálohu<input type="file" id="fimp" accept=".json,application/json"></label>
+    </div>
+  </div>
+</footer>
+</main>
+
+<button id="fab" class="fab" type="button" aria-label="Přidat jídlo" title="Přidat"><i data-i="plus"></i></button>
+
+<div id="sheet" class="sheet" hidden>
+  <div class="shbg" id="shbg"></div>
+  <div class="shcard" role="dialog" aria-modal="true" aria-label="Přidat jídla">
+    <div class="shhead"><h2 id="shtitle">Přidat jídlo</h2><button id="sheetx" class="ico sm" type="button" aria-label="Zavřít"><i data-i="x"></i></button></div>
+    <div class="secpick" id="secpick"><label for="asec">Přidat do sekce</label><select id="asec"></select></div>
+    <div id="optman">
+      <div class="row">
+        <div class="full"><label for="name">Název jídla</label><input type="text" id="name" list="dn" autocapitalize="sentences" autocomplete="off"><datalist id="dn"></datalist></div>
+        <div><label for="date">Datum</label><input type="date" id="date"></div>
+        <div><label for="price">Cena</label><input type="text" id="price" placeholder="120 Kč" inputmode="decimal" autocomplete="off"></div>
+        <div id="supw"><label for="sup">Dodavatel</label><select id="sup"><option value="">—</option><option>Soused</option><option>Hlaváček</option><option>Karl</option><option>Zelená</option></select></div>
+      </div>
+      <label class="addph" id="mph"><i data-i="camera"></i>Přidat fotky jídla<input type="file" id="mphoto" accept="image/*" multiple></label> <span class="meta" id="mphname"></span>
+      <div class="btns"><button id="save" type="button">Přidat jídlo</button></div>
+    </div>
+    <div id="optedit" hidden>
+      <div class="row">
+        <div class="full"><label for="ename">Název jídla</label><input type="text" id="ename" autocapitalize="sentences" autocomplete="off"></div>
+        <div><label for="edate">Datum</label><input type="date" id="edate"></div>
+        <div><label for="eprice">Cena</label><input type="text" id="eprice" placeholder="120 Kč" inputmode="decimal" autocomplete="off"></div>
+        <div><label for="esec">Sekce</label><select id="esec"></select></div>
+        <div id="esupw"><label for="esup">Dodavatel</label><select id="esup"><option value="">—</option><option>Soused</option><option>Hlaváček</option><option>Karl</option><option>Zelená</option></select></div>
+      </div>
+      <div class="btns"><button id="esave" type="button">Uložit změny</button><button id="ecancel" class="sec" type="button">Zrušit</button></div>
+    </div>
+  </div>
+</div>
+
+<div id="notes" class="sheet" hidden>
+  <div class="shbg" id="nbg"></div>
+  <div class="shcard" role="dialog" aria-modal="true" aria-label="Oznámení">
+    <div class="shhead"><h2>Oznámení</h2><div class="hh"><button id="nclear" class="sec" type="button">Vymazat vše</button><button id="nx" class="ico sm" type="button" aria-label="Zavřít"><i data-i="x"></i></button></div></div>
+    <div id="nlist"></div>
+  </div>
+</div>
+
+<div id="toasts"><div id="msg"></div><div id="undo" hidden><span id="undotx"></span><button id="undobtn" type="button">Vrátit zpět</button></div></div>
+<script>
+(function(){
+  var PROXY_URL='https://obedy.privateraids.workers.dev/';   // adresa Cloudflare Workeru (prázdné = jen lokální režim)
+  var $=function(i){return document.getElementById(i)};
+  var store=function(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){}return null};
+  var msgT=null;
+  function msg(t,keep){var m=$('msg');m.textContent=t||'';clearTimeout(msgT);if(t&&!keep)msgT=setTimeout(function(){if(m.textContent===t)m.textContent=''},9000)}
+  function esc(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML}
+  function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim()}
+  function slug(s){return norm(s).replace(/ /g,'-').slice(0,40)||'anon'}
+  function stars(a){
+    var r=Math.round(a*2)/2,s='';
+    for(var i=0;i<5;i++)s+='<span class="sg" style="--f:'+Math.round(Math.max(0,Math.min(1,r-i))*100)+'%">★</span>';
+    return '<span class="stars">'+s+'</span>';
+  }
+  function fmt(n){return (Math.round(n*10)/10).toFixed(1).replace('.',',')}
+  function er(e){return (e&&(e.message||e.code))||String(e)}
+  function newId(p){return (p||'l')+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+  var uid=store('obedyUid');if(!uid){uid=newId('u')+Math.random().toString(36).slice(2,8);store('obedyUid',uid)}
+  function strip(o){var c=Object.assign({},o);delete c.id;return c}
+
+  /* ---------- jednotná sada ikon (čárové, v barvě textu) ---------- */
+  var ICONS={
+    utensils:'<path d="M7 3v8M4 3v5a3 3 0 0 0 3 3 3 3 0 0 0 3-3V3M7 11v10"/><path d="M17 21V3c-2.5 1-4 3.5-4 7v3h4"/>',
+    soup:'<path d="M3 12h18a8 8 0 0 1-8 8h-2a8 8 0 0 1-8-8z"/><path d="M8 3.5c-1 1.2 1 2.3 0 3.5M12 3.5c-1 1.2 1 2.3 0 3.5M16 3.5c-1 1.2 1 2.3 0 3.5"/>',
+    search:'<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
+    sliders:'<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>',
+    moon:'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
+    sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    plus:'<path d="M12 5v14M5 12h14"/>',
+    x:'<path d="M18 6 6 18M6 6l12 12"/>',
+    camera:'<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3.5"/>',
+    star:'<path d="m12 2.5 3.1 6.3 6.9 1-5 4.9 1.2 6.9-6.2-3.3-6.2 3.3L7 14.7 2 9.8l6.9-1z"/>',
+    chart:'<path d="M3 3v18h18"/><path d="M8 17v-6M13 17V7M18 17v-4"/>',
+    download:'<path d="M12 3v12M7 10l5 5 5-5M4 21h16"/>',
+    upload:'<path d="M12 21V9M7 14l5-5 5 5M4 3h16"/>',
+    pencil:'<path d="M17 3a2.8 2.8 0 0 1 4 4L8 20l-5 1 1-5z"/>',
+    bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+    chevl:'<path d="m15 18-6-6 6-6"/>',
+    chevr:'<path d="m9 18 6-6-6-6"/>',
+  };
+  function ic(n){return '<svg class="i" viewBox="0 0 24 24" aria-hidden="true">'+(ICONS[n]||'')+'</svg>'}
+  [].forEach.call(document.querySelectorAll('[data-i]'),function(el){el.innerHTML=ic(el.getAttribute('data-i'))});
+
+  /* ---------- vzhled ---------- */
+  function sysDark(){return !!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)}
+  function applyTheme(t){
+    if(t)document.documentElement.setAttribute('data-theme',t);
+    var dark=t?t==='dark':sysDark();
+    $('theme').innerHTML=ic(dark?'sun':'moon');
+    var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',dark?'#151311':'#f5f1ea');
+  }
+  applyTheme(store('theme'));
+  $('theme').onclick=function(){
+    var cur=document.documentElement.getAttribute('data-theme'),dark=cur?cur==='dark':sysDark(),n=dark?'light':'dark';
+    store('theme',n);applyTheme(n);
+  };
+  $('date').value=new Date().toISOString().slice(0,10);
+  function openAdd(){
+    $('optedit').hidden=true;$('optman').hidden=false;$('shtitle').textContent='Přidat jídlo';
+    $('asec').value=page;syncSup();$('secpick').hidden=false;
+    $('sheet').hidden=false;document.body.classList.add('noscroll','sheet-open');
+  }
+  var editId=null;
+  function openEdit(l,v){
+    v=v||{};editId=l.id;
+    $('ename').value=v.name!=null?v.name:(l.name||'');$('edate').value=v.date!=null?v.date:(l.date||'');
+    $('eprice').value=v.price!=null?v.price:(l.price||'');$('esup').value=v.supplier!=null?v.supplier:(l.supplier||'');
+    $('esec').value=v.sec!=null?v.sec:secOf(l);$('esupw').hidden=$('esec').value!=='qs';
+    $('secpick').hidden=true;
+    $('shtitle').textContent='Upravit jídlo';$('optman').hidden=true;$('optedit').hidden=false;
+    $('sheet').hidden=false;document.body.classList.add('noscroll','sheet-open');
+  }
+  function closeAdd(){$('sheet').hidden=true;document.body.classList.remove('noscroll','sheet-open')}
+  $('fab').onclick=openAdd;
+  $('emptyadd').onclick=openAdd;
+  $('sheetx').onclick=closeAdd;$('shbg').onclick=closeAdd;
+  $('ftog').onclick=function(){$('bar2').hidden=!$('bar2').hidden};
+  $('mphoto').onchange=function(e){var n=e.target.files.length;$('mphname').textContent=n>1?n+' fotky':(n?e.target.files[0].name:'')};
+  var lbList=[],lbIdx=0;
+  function lbShow(){
+    $('lb').querySelector('img').src=lbList[lbIdx];
+    $('lbc').textContent=lbList.length>1?(lbIdx+1)+' / '+lbList.length:'';
+    $('lbp').hidden=$('lbn').hidden=lbList.length<2;
+  }
+  function openLb(list,i){lbList=list;lbIdx=i||0;lbShow();$('lb').hidden=false}
+  function lbMove(d){if(lbList.length<2)return;lbIdx=(lbIdx+d+lbList.length)%lbList.length;lbShow()}
+  $('lb').onclick=function(){$('lb').hidden=true};
+  $('lbp').onclick=function(e){e.stopPropagation();lbMove(-1)};
+  $('lbn').onclick=function(e){e.stopPropagation();lbMove(1)};
+  (function(){var x0=null;
+    $('lb').addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});
+    $('lb').addEventListener('touchend',function(e){if(x0==null)return;var dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>50)lbMove(dx<0?1:-1)},{passive:true});
+  })();
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){if(!$('lb').hidden)$('lb').hidden=true;else if(!$('notes').hidden)closeNotes();else if(!$('sheet').hidden)closeAdd()}
+    else if(!$('lb').hidden&&e.key==='ArrowLeft')lbMove(-1);
+    else if(!$('lb').hidden&&e.key==='ArrowRight')lbMove(1);
+  });
+
+  /* ---------- sekce (stránky): QS, Moc, Burger ---------- */
+  var SECS=[{k:'qs',n:'QS'},{k:'moc',n:'Moc'},{k:'burger',n:'Burger'}];
+  function secOf(l){return l.sec||'qs'}   // jídla bez sekce patří do QS
+  function secName(k){var x=SECS.filter(function(y){return y.k===k})[0];return x?x.n:k}
+  function validSec(k){return SECS.some(function(y){return y.k===k})}
+  var page=(function(){var h=(location.hash||'').slice(1);if(validSec(h))return h;var p=store('obedyPage');return validSec(p)?p:'qs'})();
+  [$('asec'),$('esec')].forEach(function(sel){SECS.forEach(function(x){var o=document.createElement('option');o.value=x.k;o.textContent=x.n;sel.appendChild(o)})});
+  function syncSup(){$('supw').hidden=$('asec').value!=='qs'}
+  $('asec').onchange=syncSup;
+  $('esec').onchange=function(){$('esupw').hidden=$('esec').value!=='qs'};
+  function setPage(k){
+    if(!validSec(k))return;
+    page=k;supF='';store('obedyPage',k);
+    try{history.replaceState(null,'','#'+k)}catch(e){}
+    render();window.scrollTo({top:0});
+  }
+  window.addEventListener('hashchange',function(){var h=(location.hash||'').slice(1);if(h!==page&&validSec(h))setPage(h)});
+
+  /* lišta s hledáním se na telefonu schová při posouvání dolů a vrátí při posouvání nahoru */
+  var lastY=0,tick=false;
+  window.addEventListener('scroll',function(){
+    if(tick)return;tick=true;
+    requestAnimationFrame(function(){
+      var y=window.scrollY||0,t=document.querySelector('.tools');
+      if(y<80||!$('bar2').hidden||document.activeElement===$('q'))t.classList.remove('hide');
+      else if(y>lastY+10)t.classList.add('hide');
+      else if(y<lastY-10)t.classList.remove('hide');
+      lastY=y;tick=false;
+    });
+  },{passive:true});
+
+  /* ---------- dodavatelé ---------- */
+  var SUP={SOU:'Soused',HLA:'Hlaváček',KAR:'Karl',ZEL:'Zelená'};
+  var SK={'Soused':'s','Hlaváček':'h','Karl':'k','Zelená':'z'};
+  var SUPN=['Soused','Hlaváček','Karl','Zelená'];
+  function supOf(code){
+    var c=String(code||''),m=c.match(/\b(SOU|HLA|KAR|ZEL)\b/);
+    if(m)return SUP[m[1]];
+    if(/S[O0]U/i.test(c))return 'Soused';
+    if(/H[LI][AÁ]/i.test(c))return 'Hlaváček';
+    if(/\bK[AÁ][RN]\b/i.test(c))return 'Karl';
+    if(/\bZ[E3]?L\b/i.test(c))return 'Zelená';
+    return '';
+  }
+
+  /* ---------- data a synchronizace ---------- */
+  var data={lunches:{},ratings:{},photos:{}}, sha=null, pend=0;
+  var lunches=[], ratings=[], photos=[], drafts={}, openIds={}, supF='', photoCache={}, pending=false, loaded=false, dataOk=false, fresh={};
+  function norm3(d){['lunches','ratings','photos'].forEach(function(n){d[n]=d[n]||{}});return d}
+  function arr(o){return Object.keys(o||{}).map(function(id){return Object.assign({id:id},o[id])})}
+  function fire(){lunches=arr(data.lunches);ratings=arr(data.ratings);photos=arr(data.photos);render()}
+  function localLoad(){try{return norm3(JSON.parse(localStorage.getItem('obedyData')||'{}'))}catch(e){return norm3({})}}
+  function localSave(){try{localStorage.setItem('obedyData',JSON.stringify(data))}catch(e){}}
+
+  async function pxCall(method,body,path){
+    var pw=store('obedyPw')||'';
+    var r=await fetch(PROXY_URL+(path||''),{method:method,headers:{'Content-Type':'application/json','X-Obedy-Password':pw},body:body?JSON.stringify(body):undefined,cache:'no-store'});
+    if(r.status===401){
+      var p=prompt('Heslo k obědům:');
+      if(!p)throw new Error('Chybí heslo.');
+      store('obedyPw',p);
+      return pxCall(method,body,path);
+    }
+    return r;
+  }
+  async function srvRead(since){
+    var r=await pxCall('GET');
+    if(!r.ok)throw new Error('Server: chyba '+r.status);
+    var j=await r.json();
+    if(since&&j.sha===since)return null;
+    var d;try{d=norm3(j.text&&j.text.trim()?JSON.parse(j.text):{})}catch(e){throw new Error('Datový soubor není platný JSON.')}
+    return {d:d,sha:j.sha};
+  }
+  async function srvWrite(d,s){
+    var r=await pxCall('PUT',{sha:s,text:JSON.stringify(d)});
+    if(r.status===409)return {conflict:true};
+    if(!r.ok)throw new Error('Server: chyba '+r.status);
+    return {sha:(await r.json()).sha};
+  }
+  /* změna se ihned projeví na obrazovce a na pozadí se uloží; při chybě se vrátí zpět */
+  async function mutate(fn){
+    if(!PROXY_URL){fn(data);localSave();fire();return}
+    var clone=JSON.parse(JSON.stringify(data));fn(clone);data=clone;fire();
+    pend++;
+    try{
+      for(var t=0;t<4;t++){
+        var cur=await srvRead();fn(cur.d);
+        var w=await srvWrite(cur.d,cur.sha);
+        if(!w.conflict){sha=w.sha;if(pend<=1){data=cur.d;fire()}return}
+      }
+      throw new Error('Soubor mezitím změnil někdo jiný, zkus to znovu.');
+    }catch(e){
+      try{var c=await srvRead();data=c.d;sha=c.sha}catch(e2){}
+      fire();throw e;
+    }finally{pend--}
+  }
+  async function poll(fg){
+    if(!PROXY_URL||document.hidden||pend>0)return;
+    var changed=false;
+    try{var c=await srvRead(sha);if(c&&pend===0){data=c.d;sha=c.sha;fire();changed=true}}catch(e){}
+    if(fg)detect(true);else if(changed)detect(false);
+  }
+  setInterval(poll,20000);
+  document.addEventListener('visibilitychange',function(){if(document.hidden)saveSeen();else poll(true)});
+  window.addEventListener('pagehide',saveSeen);
+
+  /* ---------- fotky ---------- */
+  function compress(file,max,q){
+    return new Promise(function(res,rej){
+      var img=new Image();
+      img.onload=function(){
+        var k=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement('canvas');
+        c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);
+        c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+        res(c.toDataURL('image/jpeg',q));
+      };
+      img.onerror=function(){rej(new Error('Obrázek nejde načíst'))};
+      img.src=URL.createObjectURL(file);
+    });
+  }
+  async function uploadPhoto(file){
+    var du=await compress(file,PROXY_URL?1280:700,PROXY_URL?0.8:0.65),id=newId('p');
+    if(!PROXY_URL)return {url:du,id:id};
+    var r=await pxCall('POST',{id:id,content:du.split(',')[1]},'photo');
+    var j={};try{j=await r.json()}catch(e){}
+    if(!r.ok)throw new Error(j.error||('chyba '+r.status));
+    photoCache[j.url]=du;
+    return {url:j.url,id:id};
+  }
+  async function addPhoto(lid,f){
+    var up=await uploadPhoto(f);
+    await mutate(function(d){d.photos[up.id]={lunchId:lid,url:up.url,created:Date.now(),uid:uid}});
+  }
+
+  /* ---------- vrácení smazání ---------- */
+  var undoT=null,undoFn=null;
+  function showUndo(text,fn){
+    undoFn=fn;$('undotx').textContent=text;$('undo').hidden=false;
+    clearTimeout(undoT);undoT=setTimeout(function(){$('undo').hidden=true;undoFn=null},10000);
+  }
+  $('undobtn').onclick=async function(){
+    var f=undoFn;$('undo').hidden=true;undoFn=null;
+    if(f)try{await f();msg('Vráceno ✔')}catch(e){msg('Vrácení se nepovedlo: '+er(e))}
+  };
+
+  /* ---------- seznam, filtry, přehled ---------- */
+  function money(v){v=String(v||'').trim();return /^\d+([.,]\d{1,2})?$/.test(v)?v.replace('.',',')+' Kč':v}
+  function priceNum(l){var m=String(l.price||'').replace(/\s/g,'').match(/\d+/);return m?+m[0]:null}
+  function render(){
+    var act=document.activeElement;
+    if(act&&$('list').contains(act)&&/INPUT|TEXTAREA/.test(act.tagName)){pending=true;return}
+    pending=false;
+    renderPages();
+    if(!loaded){$('list').innerHTML='<div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div>';$('empty').hidden=true;return}
+    var R={},P={};
+    ratings.forEach(function(r){(R[r.lunchId]=R[r.lunchId]||[]).push(r)});
+    photos.forEach(function(p){(P[p.lunchId]=P[p.lunchId]||[]).push(p)});
+    var avg=function(l){var rs=R[l.id]||[];return rs.length?rs.reduce(function(a,r){return a+r.stars},0)/rs.length:-1};
+    var hasPh=function(l){return !!((P[l.id]||[]).length||l.photo)};
+    var q=norm($('q').value),ff=$('ff').value,pmin=parseFloat($('pmin').value),pmax=parseFloat($('pmax').value);
+    var inSec=lunches.filter(function(l){return secOf(l)===page});
+    var isQs=page==='qs';
+    var base=inSec.filter(function(l){
+      if(q&&norm(l.name+' '+(l.code||'')+' '+(l.supplier||'')).indexOf(q)<0)return false;
+      var n=(R[l.id]||[]).length;
+      if(ff==='unrated'&&n)return false;
+      if(ff==='rated'&&!n)return false;
+      if(ff==='photo'&&!hasPh(l))return false;
+      if(ff==='nophoto'&&hasPh(l))return false;
+      if(!isNaN(pmin)||!isNaN(pmax)){var pn=priceNum(l);if(pn==null)return false;if(!isNaN(pmin)&&pn<pmin)return false;if(!isNaN(pmax)&&pn>pmax)return false}
+      return true;
+    });
+    var cnt={'':base.length};
+    base.forEach(function(l){var k=l.supplier||'-';cnt[k]=(cnt[k]||0)+1;if(fresh[l.id])cnt['#new']=(cnt['#new']||0)+1});
+    var ch=$('chips');ch.innerHTML='';
+    [['','Všichni'],['#new','Nové']].concat(isQs?[['Soused','Soused'],['Hlaváček','Hlaváček'],['Karl','Karl'],['Zelená','Zelená'],['-','Bez dodavatele']]:[]).forEach(function(c){
+      if((c[0]==='-'||c[0]==='#new')&&!cnt[c[0]])return;
+      var b=document.createElement('button');b.type='button';b.className=supF===c[0]?'on':'';
+      b.innerHTML=(SK[c[0]]?'<span class="dot s-'+SK[c[0]]+'"></span>':'')+esc(c[1])+' <span class="cn">'+(cnt[c[0]]||0)+'</span>';
+      b.onclick=function(){supF=c[0];render()};
+      ch.appendChild(b);
+    });
+    ch.hidden=ch.children.length<=1;
+    var arr2=base.filter(function(l){if(!supF)return true;if(supF==='#new')return !!fresh[l.id];if(supF==='-')return !l.supplier;return l.supplier===supF});
+    var s=$('sort').value;
+    arr2.sort(function(a,b){
+      if(s==='best')return avg(b)-avg(a)||(b.date||'').localeCompare(a.date||'');
+      if(s==='az')return norm(a.name).localeCompare(norm(b.name));
+      return (b.date||'').localeCompare(a.date||'')||(b.created||0)-(a.created||0);
+    });
+    var el=$('list');el.innerHTML='';
+    $('empty').hidden=arr2.length>0;
+    $('emptytx').textContent=inSec.length?'Nic nenalezeno.':'V sekci '+secName(page)+' zatím nejsou žádná jídla.';
+    $('emptyadd').hidden=!!inSec.length;
+    $('ftog').classList.toggle('act',!!(ff||!isNaN(pmin)||!isNaN(pmax)));
+    arr2.forEach(function(l){el.appendChild(card(l,R[l.id]||[],P[l.id]||[],avg(l)))});
+    var dn=$('dn');if(dn){dn.innerHTML='';inSec.slice(0,300).forEach(function(l){var o=document.createElement('option');o.value=l.name;dn.appendChild(o)})}
+    renderStats(R,hasPh,avg,inSec);
+  }
+  document.addEventListener('focusout',function(){setTimeout(function(){if(pending)render()},150)});
+  ['q','pmin','pmax'].forEach(function(i){$(i).oninput=render});
+  $('sort').onchange=render;$('ff').onchange=render;
+
+  function renderPages(){
+    var nav=$('pages');nav.innerHTML='';
+    SECS.forEach(function(sc){
+      var n=0,nd=false;
+      lunches.forEach(function(l){if(secOf(l)===sc.k){n++;if(fresh[l.id])nd=true}});
+      var b=document.createElement('button');b.type='button';b.className=sc.k===page?'on':'';
+      b.setAttribute('aria-current',sc.k===page?'page':'false');
+      b.innerHTML=esc(sc.n)+' <span class="cn">'+n+'</span>'+(nd?'<i class="nd" title="Něco nového"></i>':'');
+      b.onclick=function(){setPage(sc.k)};
+      nav.appendChild(b);
+    });
+  }
+  function renderStats(R,hasPh,avg,L){
+    var rank=L.filter(function(l){return (R[l.id]||[]).length}).map(function(l){return {l:l,a:avg(l),n:R[l.id].length}})
+      .sort(function(x,y){return y.a-x.a||y.n-x.n}).slice(0,10);
+    var rc=0;L.forEach(function(l){rc+=(R[l.id]||[]).length});
+    $('stattitle').textContent='Přehled · '+secName(page);
+    var h='<div class="stats-grid"><div class="stat"><b>'+L.length+'</b>jídel</div><div class="stat"><b>'+rc+'</b>hodnocení</div><div class="stat"><b>'+L.filter(hasPh).length+'</b>s fotkou</div></div>';
+    h+='<div class="h2">Nejlépe hodnocená jídla</div>';
+    h+=rank.length?rank.map(function(x,i){
+      return '<div class="rank"><span class="n"><span class="medal'+(i<3?' m'+(i+1):'')+'">'+(i+1)+'</span></span><span class="t">'+esc(x.l.name)+(x.l.supplier?' <span class="meta">· '+esc(x.l.supplier)+'</span>':'')+'</span><span>'+stars(x.a)+' <b>'+fmt(x.a)+'</b> <span class="meta">('+x.n+')</span></span></div>'}).join(''):'<div class="meta">Zatím nic nebylo hodnoceno.</div>';
+    if(page==='qs'){
+      h+='<div class="h2">Dodavatelé podle hodnocení</div>';
+      var rows=SUPN.map(function(sn){
+        var sum=0,n=0;L.forEach(function(l){if(l.supplier===sn)(R[l.id]||[]).forEach(function(r){sum+=r.stars;n++})});
+        return {sn:sn,a:n?sum/n:0,n:n};
+      });
+      h+=rows.map(function(r){
+        return '<div class="bar-s s-'+SK[r.sn]+'"><span class="nm">'+esc(r.sn)+'</span><span class="tr"><span class="fl" style="display:block;width:'+Math.round(r.a/5*100)+'%"></span></span><span>'+(r.n?'<b>'+fmt(r.a)+'</b> <span class="meta">('+r.n+')</span>':'<span class="meta">—</span>')+'</span></div>'}).join('');
+    }
+    $('statsbody').innerHTML=h;
+  }
+
+  function isMine(r){
+    if(r.uid)return r.uid===uid;
+    var n=store('name');return !!(n&&slug(r.name)===slug(n));   // starší hodnocení bez podpisu: pozná se podle jména
+  }
+  function card(l,rs,ph,av){
+    var d=drafts[l.id]||(drafts[l.id]={name:store('name')||'',stars:0,text:''});
+    ph=ph.slice().sort(function(x,y){return (x.created||0)-(y.created||0)});
+    if(l.photo)ph=[{url:l.photo}].concat(ph);
+    var urls=ph.map(function(p){return photoCache[p.url]||p.url});
+    var key=SK[l.supplier]||'';
+    var fr=fresh[l.id];
+    var a=document.createElement('article');a.className='item'+(key?' s-'+key:'')+(fr?' fresh':'');a.dataset.lid=l.id;
+    var meta=[l.date,l.supplier?l.code:(l.code||l.place)].filter(Boolean).map(esc).join(' · ');
+    rs.sort(function(x,y){return (y.created||0)-(x.created||0)});
+    var soup=/^Pol[eé]v/i.test(l.code||'')||/pol[eé]vk|vývar|kaldoun/i.test(l.name);
+    a.innerHTML='<div class="cph'+(ph.length?' has':'')+'">'+(ph.length?'<div class="gal">'+urls.map(function(u){return '<img loading="lazy" src="'+esc(u)+'" alt="">'}).join('')+'</div>':'<span class="emo">'+ic(soup?'soup':'utensils')+'</span>')+
+      (ph.length>1?'<span class="pill bl cnt">1/'+ph.length+'</span>':'')+
+      (l.supplier?'<span class="pill tl"><i class="dot s-'+key+'"></i>'+esc(l.supplier)+'</span>':'')+
+      (rs.length?'<span class="pill tr"><span class="star">★</span>'+fmt(av)+'</span>':'')+
+      (l.price?'<span class="pill br">'+esc(l.price)+'</span>':'')+'</div>'+
+      '<div class="cb">'+(fr?'<div class="newtag">'+(fr.l?'Nové jídlo':(fr.r&&fr.p?'Nové hodnocení a fotky':(fr.r?'Nové hodnocení':'Nové fotky')))+'</div>':'')+'<h3>'+esc(l.name)+'</h3><div class="meta">'+meta+'</div>'+
+      (rs.length?'<div class="avg">'+stars(av)+' <span class="meta">'+rs.length+'×</span></div>':'')+
+      '<details><summary><span>'+ic('star')+'Hodnotit · '+ic('camera')+'fotky'+(ph.length>1?' ('+ph.length+')':'')+'</span></summary>'+
+      (ph.some(function(p){return p.id})?'<div class="thumbs">'+ph.map(function(p){return p.id?'<div class="th"><img loading="lazy" src="'+esc(photoCache[p.url]||p.url)+'" alt=""><button class="px" type="button" data-id="'+esc(p.id)+'" aria-label="Smazat fotku">'+ic('x')+'</button></div>':''}).join('')+'</div>':'')+
+      rs.map(function(r,i){
+        var mine=isMine(r);
+        return '<div class="rt" data-i="'+i+'"><b>'+esc(r.name)+'</b> '+stars(r.stars)+(r.text?' <span>'+esc(r.text)+'</span>':'')+
+          (r.updated&&r.updated>(r.created||0)+60000?' <span class="meta">(upraveno)</span>':'')+
+          (mine?'<span class="ra"><button class="re" type="button" title="Upravit hodnocení" aria-label="Upravit hodnocení">'+ic('pencil')+'</button><button class="x" type="button" title="Smazat hodnocení" aria-label="Smazat hodnocení">'+ic('x')+'</button></span>':'')+'</div>'}).join('')+
+       '<div class="fm">'+(d.editId?'<div class="editnote">Upravuješ své hodnocení</div>':'')+'<input type="text" class="nm" placeholder="Tvoje jméno" autocomplete="given-name" autocapitalize="words"><div class="pick">'+
+      [1,2,3,4,5].map(function(n){return '<button type="button" class="sg" data-n="'+n+'" aria-label="'+n+' z 5">★</button>'}).join('')+
+      '<span class="pv"></span></div><input type="text" class="tx" placeholder="Komentář (nepovinné)"><button class="rate">'+(d.editId?'Uložit změny':'Uložit hodnocení')+'</button>'+(d.editId?'<button class="sec cancel" type="button">Zrušit úpravu</button>':'')+'</div>'+
+      '<label class="addph">'+ic('camera')+'Přidat fotky<input type="file" accept="image/*" multiple></label></details>'+
+      '<div class="acts"><button class="edit" type="button">'+ic('pencil')+'Upravit</button><button class="del" type="button">Smazat</button></div></div>';
+    var det=a.querySelector('details');
+    if(openIds[l.id])det.open=true;
+    det.addEventListener('toggle',function(){openIds[l.id]=det.open});
+    var gal=a.querySelector('.gal'),cnt=a.querySelector('.cnt');
+    if(gal){
+      [].forEach.call(gal.querySelectorAll('img'),function(im,i){im.onclick=function(){openLb(urls,i)}});
+      if(cnt)gal.addEventListener('scroll',function(){var i=Math.round(gal.scrollLeft/(gal.clientWidth||1));cnt.textContent=(i+1)+'/'+ph.length},{passive:true});
+    }
+    [].forEach.call(a.querySelectorAll('.th img'),function(im,i){im.onclick=function(){openLb(urls,i)}});
+    [].forEach.call(a.querySelectorAll('.px'),function(b){
+      b.onclick=async function(){
+        var pid=b.dataset.id,rec=photos.filter(function(x){return x.id===pid})[0];if(!rec)return;
+        var snap=strip(rec);
+        try{
+          await mutate(function(x){delete x.photos[pid]});
+          showUndo('Fotka smazána.',function(){return mutate(function(x){x.photos[pid]=snap})});
+        }catch(e){msg('Smazání se nepovedlo: '+er(e))}
+      };
+    });
+    var nm=a.querySelector('.nm'),tx=a.querySelector('.tx'),pick=a.querySelectorAll('.pick button');
+    nm.value=d.name;tx.value=d.text;
+    var pv=a.querySelector('.pv');
+    function paint(){
+      [].forEach.call(pick,function(b){b.style.setProperty('--f',Math.round(Math.max(0,Math.min(1,d.stars-(+b.dataset.n-1)))*100)+'%')});
+      pv.textContent=d.stars?fmt(d.stars):'';
+    }
+    paint();
+    [].forEach.call(pick,function(b){b.onclick=function(e){
+      var r=b.getBoundingClientRect(),half=e.detail>0&&(e.clientX-r.left)<r.width/2;
+      d.stars=+b.dataset.n-(half?0.5:0);paint();
+    }});
+    nm.oninput=function(){d.name=nm.value;store('name',nm.value)};
+    tx.oninput=function(){d.text=tx.value};
+    a.querySelector('.rate').onclick=async function(){
+      var n=d.name.trim();
+      if(!n)return msg('Napiš své jméno.');
+      if(!d.stars)return msg('Vyber počet hvězdiček.');
+      var key=l.id+'_'+uid;
+      var mineOld=rs.filter(function(r){return r.id===d.editId||r.id===key})[0]||rs.filter(function(r){return isMine(r)})[0];
+      var rec={lunchId:l.id,name:n,stars:d.stars,text:d.text.trim(),created:mineOld?mineOld.created||Date.now():Date.now(),uid:uid};
+      if(mineOld)rec.updated=Date.now();
+      var oldId=mineOld?mineOld.id:null,oldSnap=mineOld?strip(mineOld):null;
+      d.stars=0;d.text='';d.editId=null;
+      try{
+        await mutate(function(x){if(oldId&&oldId!==key)delete x.ratings[oldId];x.ratings[key]=rec});
+        if(mineOld)showUndo('Hodnocení upraveno.',function(){return mutate(function(x){if(oldId!==key)delete x.ratings[key];x.ratings[oldId]=oldSnap})});
+        else msg('Hodnocení uloženo ✔');
+      }catch(e){msg('Hodnocení se nepodařilo uložit: '+er(e))}
+    };
+    [].forEach.call(a.querySelectorAll('.rt .re'),function(b){
+      b.onclick=function(){
+        var r=rs[+b.closest('.rt').dataset.i];if(!r)return;
+        d.name=r.name;d.stars=r.stars;d.text=r.text||'';d.editId=r.id;openIds[l.id]=true;render();
+      };
+    });
+    var cn=a.querySelector('.cancel');
+    if(cn)cn.onclick=function(){d.stars=0;d.text='';d.editId=null;render()};
+    [].forEach.call(a.querySelectorAll('.rt .x'),function(b){
+      b.onclick=async function(){
+        var r=rs[+b.closest('.rt').dataset.i];if(!r||!isMine(r))return;
+        var snap=strip(r);
+        try{
+          await mutate(function(x){delete x.ratings[r.id]});
+          showUndo('Hodnocení od '+r.name+' smazáno.',function(){return mutate(function(x){x.ratings[r.id]=snap})});
+        }catch(e){msg('Smazání se nepovedlo: '+er(e))}
+      };
+    });
+    a.querySelector('.addph input').onchange=async function(e){
+      var fs=[].slice.call(e.target.files);
+      if(!fs.length)return;
+      try{
+        for(var i=0;i<fs.length;i++){msg('Nahrávám fotku '+(i+1)+'/'+fs.length+'…',true);await addPhoto(l.id,fs[i])}
+        msg(fs.length>1?'Fotky uloženy ✔':'Fotka uložena ✔');
+      }catch(err){msg('Fotku se nepodařilo nahrát: '+er(err))}
+    };
+    a.querySelector('.edit').onclick=function(){openEdit(l)};
+    a.querySelector('.del').onclick=async function(){
+      var rr=ratings.filter(function(r){return r.lunchId===l.id}),pp=photos.filter(function(p){return p.lunchId===l.id});
+      var snap={l:strip(l),rs:rr.map(function(r){return [r.id,strip(r)]}),ps:pp.map(function(p){return [p.id,strip(p)]})};
+      try{
+        await mutate(function(x){delete x.lunches[l.id];rr.forEach(function(r){delete x.ratings[r.id]});pp.forEach(function(p){delete x.photos[p.id]})});
+        showUndo('Jídlo „'+l.name+'“ smazáno.',function(){return mutate(function(x){
+          x.lunches[l.id]=snap.l;snap.rs.forEach(function(p){x.ratings[p[0]]=p[1]});snap.ps.forEach(function(p){x.photos[p[0]]=p[1]});
+        })});
+      }catch(e){msg('Smazání se nepovedlo: '+er(e))}
+    };
+    return a;
+  }
+
+  /* ---------- oznámení (zvoneček) a novinky od posledního otevření ---------- */
+  function cz(n,a,b,c){return n+' '+(n===1?a:(n>=2&&n<=4?b:c))}
+  var notes=[];
+  (function(){
+    try{notes=JSON.parse(store('obedyNotes')||'[]')||[]}catch(e){notes=[]}
+    var lim=Date.now()-30*864e5;notes=notes.filter(function(n){return n&&n.t>lim}).slice(0,60);
+  })();
+  function saveNotes(){store('obedyNotes',JSON.stringify(notes.slice(0,60).map(function(n){var c=Object.assign({},n);delete c._u;return c})))}
+  function unreadNotes(){return notes.filter(function(n){return !n.read})}
+  function updateBell(){
+    var u=unreadNotes().length,b=$('bellb');
+    b.hidden=!u;b.textContent=u>9?'9+':String(u);
+    $('bell').setAttribute('aria-label',u?'Oznámení ('+u+' nových)':'Oznámení');
+  }
+  function saveSeen(){
+    if(!dataOk)return;
+    var o={l:{},r:{},p:{}};
+    lunches.forEach(function(l){o.l[l.id]=1});
+    ratings.forEach(function(r){o.r[r.id]=r.updated||r.created||1});
+    photos.forEach(function(p){o.p[p.id]=1});
+    store('obedySeen',JSON.stringify(o));
+  }
+  function evT(t){var now=Date.now();return (t&&t>946684800000&&t<=now+36e5)?t:now}
+  function noteHtml(n){
+    var where=esc(n.ln)+' <span class="meta">('+esc(secName(n.sec))+')</span>';
+    if(n.type==='lunch')return '<b>Nové jídlo</b> '+esc(n.ln)+' <span class="meta">· '+esc(secName(n.sec))+(n.sup?' · '+esc(n.sup):'')+'</span>';
+    if(n.type==='photo')return '<b>'+cz(n.n,'nová fotka','nové fotky','nových fotek')+'</b> <span class="meta">·</span> '+where;
+    return '<b>'+(n.type==='edit'?'Upraveno':'Hodnocení')+'</b> '+stars(n.stars)+' '+esc(n.who)+' <span class="meta">·</span> '+where+(n.text?' <span class="meta">„'+esc(n.text)+'“</span>':'');
+  }
+  function showBanner(u){   // jen novinky z právě proběhlého porovnání; starší nepřečtené zůstávají pod zvonečkem
+    if(!u||!u.length){$('news').hidden=true;return}
+    var nl=u.filter(function(n){return n.type==='lunch'}).length,
+        nr=u.filter(function(n){return n.type==='rating'||n.type==='edit'}).length,
+        np=u.filter(function(n){return n.type==='photo'}).reduce(function(a,n){return a+(n.n||1)},0),parts=[];
+    if(nl)parts.push(cz(nl,'nové jídlo','nová jídla','nových jídel'));
+    if(nr)parts.push(cz(nr,'nové hodnocení','nová hodnocení','nových hodnocení'));
+    if(np)parts.push(cz(np,'nová fotka','nové fotky','nových fotek'));
+    $('newssum').textContent='Od posledního otevření přibylo: '+parts.join(' · ');
+    $('newsbody').innerHTML=u.slice(0,6).map(function(n){return '<div class="nl">'+noteHtml(n)+'</div>'}).join('')+(u.length>6?'<div class="nl meta">… a dalších '+(u.length-6)+' změn (najdeš je pod zvonečkem)</div>':'');
+    $('news').hidden=false;
+  }
+  /* porovná data s tím, co už zařízení znalo; nové věci od ostatních uloží do oznámení */
+  function detect(report){
+    if(!dataOk)return;
+    var raw=store('obedySeen');
+    if(!raw){saveSeen();return}
+    var seen;try{seen=JSON.parse(raw)||{}}catch(e){saveSeen();return}
+    seen.l=seen.l||{};seen.r=seen.r||{};seen.p=seen.p||{};
+    var byId={};lunches.forEach(function(l){byId[l.id]=l});
+    var L=lunches.filter(function(l){return !seen.l[l.id]&&l.uid!==uid});
+    var R=ratings.filter(function(r){var v=r.updated||r.created||1;return byId[r.lunchId]&&(seen.r[r.id]==null||seen.r[r.id]<v)&&!isMine(r)});
+    var P=photos.filter(function(p){return byId[p.lunchId]&&!seen.p[p.id]&&p.uid!==uid});
+    saveSeen();
+    if(!L.length&&!R.length&&!P.length)return;
+    var have={};notes.forEach(function(n){have[n.k]=1});
+    var add=[];
+    function push(n){if(!have[n.k]){have[n.k]=1;n.read=false;add.push(n)}}
+    L.forEach(function(l){push({k:'l:'+l.id,t:evT(l.created),type:'lunch',lid:l.id,ln:l.name,sec:secOf(l),sup:l.supplier||''})});
+    R.forEach(function(r){var l=byId[r.lunchId];push({k:'r:'+r.id+':'+(r.updated||r.created||0),t:evT(r.updated||r.created),type:seen.r[r.id]!=null?'edit':'rating',lid:l.id,ln:l.name,sec:secOf(l),who:r.name,stars:r.stars,text:r.text||''})});
+    var pg={};P.forEach(function(p){(pg[p.lunchId]=pg[p.lunchId]||[]).push(p)});
+    Object.keys(pg).forEach(function(id){
+      var l=byId[id],ps=pg[id];
+      push({k:'p:'+id+':'+ps.map(function(p){return p.id}).sort().join(','),t:evT(Math.max.apply(null,ps.map(function(p){return p.created||0}))),type:'photo',lid:id,ln:l.name,sec:secOf(l),n:ps.length});
+    });
+    if(!add.length)return;
+    notes=add.concat(notes).sort(function(a,b){return b.t-a.t}).slice(0,60);saveNotes();
+    L.forEach(function(l){fresh[l.id]=fresh[l.id]||{l:0,r:0,p:0};fresh[l.id].l=1});
+    R.forEach(function(r){var f=fresh[r.lunchId]=fresh[r.lunchId]||{l:0,r:0,p:0};f.r++});
+    P.forEach(function(p){var f=fresh[p.lunchId]=fresh[p.lunchId]||{l:0,r:0,p:0};f.p++});
+    updateBell();
+    if(report)showBanner(add);
+    else{
+      var nl=add.filter(function(n){return n.type==='lunch'}).length,nr=add.filter(function(n){return n.type!=='lunch'&&n.type!=='photo'}).length,np=add.filter(function(n){return n.type==='photo'}).length,pt=[];
+      if(nl)pt.push(cz(nl,'nové jídlo','nová jídla','nových jídel'));if(nr)pt.push(cz(nr,'nové hodnocení','nová hodnocení','nových hodnocení'));if(np)pt.push('nové fotky');
+      msg('Nově přibylo: '+pt.join(', ')+' (zvoneček)');
+    }
+    render();
+  }
+  $('newsx').onclick=function(){$('news').hidden=true;fresh={};if(supF==='#new')supF='';render()};
+  $('newsshow').onclick=function(){
+    var fl=lunches.filter(function(l){return fresh[l.id]});
+    var tgt=fl.some(function(l){return secOf(l)===page})?page:(fl[0]?secOf(fl[0]):page);
+    if(tgt!==page)setPage(tgt);
+    supF='#new';$('news').hidden=true;render();window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  /* panel oznámení */
+  function dayLabel(t){
+    var d=new Date(t),n=new Date(),a=new Date(n.getFullYear(),n.getMonth(),n.getDate()).getTime(),b=new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime(),df=Math.round((a-b)/864e5);
+    return df===0?'Dnes':df===1?'Včera':d.toLocaleDateString('cs-CZ',{day:'numeric',month:'numeric'});
+  }
+  function hm(t){var d=new Date(t);return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)}
+  function renderNotes(){
+    var el=$('nlist');
+    if(!notes.length){el.innerHTML='<div class="empty2">Zatím žádná oznámení. Tady se objeví, co přidají ostatní.</div>';return}
+    var h='',last='';
+    notes.forEach(function(n,i){
+      var dl=dayLabel(n.t);if(dl!==last){h+='<div class="h2">'+esc(dl)+'</div>';last=dl}
+      var gone=!lunches.some(function(l){return l.id===n.lid});
+      h+='<div class="nitem'+(n._u?' unread':'')+(gone?' gone':'')+'" data-i="'+i+'"><div class="nb">'+noteHtml(n)+(gone?' <span class="meta">(jídlo už neexistuje)</span>':'')+'</div><span class="tm">'+hm(n.t)+'</span></div>';
+    });
+    el.innerHTML=h;
+    [].forEach.call(el.querySelectorAll('.nitem'),function(r){r.onclick=function(){var n=notes[+r.dataset.i];if(n&&!r.classList.contains('gone'))goTo(n)}});
+  }
+  function openNotes(){
+    notes.forEach(function(n){n._u=!n.read});
+    renderNotes();
+    $('notes').hidden=false;document.body.classList.add('noscroll','sheet-open');
+    var ch=false;notes.forEach(function(n){if(!n.read){n.read=true;ch=true}});
+    if(ch)saveNotes();
+    updateBell();$('news').hidden=true;fresh={};if(supF==='#new')supF='';render();
+  }
+  function closeNotes(){$('notes').hidden=true;document.body.classList.remove('noscroll','sheet-open')}
+  function goTo(n){
+    closeNotes();
+    var l=lunches.filter(function(x){return x.id===n.lid})[0];if(!l)return;
+    ['q','pmin','pmax'].forEach(function(i){$(i).value=''});$('ff').value='';
+    if(secOf(l)!==page)setPage(secOf(l));else supF='';
+    if(n.type!=='lunch')openIds[l.id]=true;
+    render();
+    setTimeout(function(){
+      var el=document.querySelector('[data-lid="'+l.id+'"]');
+      if(el){el.scrollIntoView({block:'center',behavior:'smooth'});el.classList.add('flash');setTimeout(function(){el.classList.remove('flash')},2500)}
+    },80);
+  }
+  $('bell').onclick=openNotes;$('nx').onclick=closeNotes;$('nbg').onclick=closeNotes;
+  $('nclear').onclick=function(){if(!notes.length)return;notes=[];saveNotes();updateBell();renderNotes()};
+  updateBell();
+
+  /* ---------- přidávání jídel ---------- */
+  async function addLunches(items,date,sec){
+    sec=sec||page;
+    var have={};lunches.forEach(function(l){if(secOf(l)!==sec)return;var k=norm(l.name);(have[k]=have[k]||[]).push(l)});   // duplicity se hledají jen uvnitř stejné sekce
+    var added=0,seen=0,plan=[],ids=[];
+    items.forEach(function(x){
+      var sup=sec==='qs'?(x.supplier||''):'';
+      var k=norm(x.name),list=have[k]||[];
+      var old=list.filter(function(o){return !o.supplier||!sup||o.supplier===sup})[0];
+      if(old&&old.id){
+        seen++;ids.push(old.id);var up={};
+        if(date&&(old.date||'')<date)up.date=date;
+        if(!old.supplier&&sup)up.supplier=sup;
+        if(Object.keys(up).length)plan.push(['u',old.id,up]);
+      }else if(old){ids.push(null)}
+      else{
+        added++;var id=newId();ids.push(id);
+        var rec={name:x.name,price:x.price||'',code:x.code||'',supplier:sup,sec:sec,date:date,created:Date.now(),uid:uid};
+        plan.push(['a',id,rec]);(have[k]=have[k]||[]).push(Object.assign({},rec));
+      }
+    });
+    var done=plan.length?mutate(function(d){plan.forEach(function(p){d.lunches[p[1]]=p[0]==='a'?p[2]:Object.assign({},d.lunches[p[1]],p[2])})}):Promise.resolve();
+    return {added:added,seen:seen,ids:ids,done:done};
+  }
+
+  $('save').onclick=async function(){
+    var n=$('name').value.trim();
+    if(!n)return msg('Vyplň název jídla.');
+    var fl=[].slice.call($('mphoto').files);
+    $('save').disabled=true;
+    try{
+      var sec=$('asec').value;
+      var r=await addLunches([{name:n,price:money($('price').value),code:'',supplier:$('sup').value}],$('date').value,sec);
+      if(sec!==page)setPage(sec);
+      closeAdd();msg('Ukládám…',true);   // jídlo je na obrazovce hned, na pozadí se ukládá
+      await r.done;
+      var lid=r.ids[0];
+      if(fl.length&&lid){for(var fi=0;fi<fl.length;fi++){msg('Nahrávám fotku '+(fi+1)+'/'+fl.length+'…',true);await addPhoto(lid,fl[fi])}}
+      ['name','price'].forEach(function(i){$(i).value=''});$('sup').value='';$('mphoto').value='';$('mphname').textContent='';
+      msg((r.added?'Jídlo přidáno ✔':'Takové jídlo už v seznamu je, posunul jsem mu datum.')+(fl.length?(fl.length>1?' Fotky uloženy.':' Fotka uložena.'):''));
+    }catch(e){openAdd();msg('Uložení se nepovedlo: '+er(e))}
+    $('save').disabled=false;
+  };
+
+  /* ---------- záloha ---------- */
+  $('fexp').onclick=function(){
+    var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:'application/json'}));
+    a.download='obedy-data.json';a.click();
+  };
+  $('fimp').onchange=async function(e){
+    var f=e.target.files[0];if(!f)return;
+    try{
+      var d=norm3(JSON.parse(await f.text()));
+      await mutate(function(x){['lunches','ratings','photos'].forEach(function(n){Object.assign(x[n],d[n])})});
+      msg('Záloha načtena ✔');
+    }catch(err){msg('Zálohu nejde načíst: '+er(err))}
+    e.target.value='';
+  };
+
+  /* ---------- úprava jídla ---------- */
+  $('ecancel').onclick=closeAdd;
+  $('esave').onclick=async function(){
+    var id=editId,n=$('ename').value.trim();
+    if(!n)return msg('Název nesmí být prázdný.');
+    var old=lunches.filter(function(x){return x.id===id})[0];
+    if(!old){closeAdd();return}
+    var sec=$('esec').value;
+    var patch={name:n,date:$('edate').value,price:money($('eprice').value),supplier:sec==='qs'?$('esup').value:'',sec:sec};
+    var before=strip(old);
+    closeAdd();
+    try{
+      await mutate(function(d){if(d.lunches[id])d.lunches[id]=Object.assign({},d.lunches[id],patch)});
+      showUndo(sec!==secOf(old)?'Jídlo přesunuto do sekce '+secName(sec)+'.':'Jídlo upraveno.',function(){return mutate(function(d){if(d.lunches[id])d.lunches[id]=before})});
+    }catch(e){
+      var cur=lunches.filter(function(x){return x.id===id})[0];
+      if(cur)openEdit(cur,patch);
+      msg('Úprava se nepovedla: '+er(e));
+    }
+  };
+
+  /* ---------- start ---------- */
+  async function init(){
+    try{history.replaceState(null,'','#'+page)}catch(e){}
+    if(!PROXY_URL){data=localLoad();loaded=true;dataOk=true;fire();detect(true);$('fstat').textContent='Lokální režim – data jsou jen v tomto prohlížeči.';return}
+    try{
+      var c=await srvRead();data=c.d;sha=c.sha;loaded=true;dataOk=true;fire();detect(true);
+      $('fstat').textContent='Sdílená data ✔ změny vidí všichni';
+    }catch(e){loaded=true;fire();msg('Data se nepodařilo načíst: '+er(e),true);$('fstat').textContent='Data se nepodařilo načíst.'}
+  }
+  if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(function(){});
+  init();
+})();
+
+</script>
+</body>
+</html>
