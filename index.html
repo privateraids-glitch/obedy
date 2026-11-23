@@ -76,14 +76,6 @@ button:disabled{opacity:.45;cursor:default;box-shadow:none}
 .box[open]{padding-bottom:16px}
 .row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:14px}
 .row .full{grid-column:1/-1}
-.drop{display:block;border:2px dashed var(--bd);border-radius:18px;padding:26px 16px;text-align:center;cursor:pointer;color:var(--mut);margin-top:6px;background:var(--soft);font-weight:600}
-.drop:hover{border-color:var(--ac);color:var(--tx)}
-.drop input,.addph input{display:none}
-#preview{max-height:150px;max-width:100%;border-radius:14px;display:block;margin:12px auto 0}
-.mrow{display:grid;grid-template-columns:auto 1fr 80px 118px;gap:8px;align-items:center;margin-top:8px}
-.mrow input,.mrow select{padding:8px 10px;box-shadow:none}
-.mrow small{grid-column:2/-1;color:var(--mut);margin-top:-4px}
-.mrow input[type=checkbox]{width:20px;height:20px;accent-color:var(--ac);padding:0}
 .meta{color:var(--mut);font-size:.85rem}
 /* karty */
 .list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px;align-items:start}
@@ -136,6 +128,7 @@ button:disabled{opacity:.45;cursor:default;box-shadow:none}
 .fm{margin-top:12px}
 .fm input[type=text]{margin-bottom:8px;box-shadow:none;padding:9px 12px}
 .addph{display:inline-flex;align-items:center;gap:6px;margin-top:12px;border:1px dashed var(--bd);border-radius:14px;padding:9px 14px;cursor:pointer;font-size:.88rem;color:var(--mut);font-weight:600;margin-bottom:0}
+.addph input{display:none}
 .addph:hover{border-color:var(--ac);color:var(--tx)}
 .acts{display:flex;gap:18px;align-items:center;margin-top:8px}
 .edit,.del{background:none;color:var(--mut);padding:0;font-weight:600;font-size:.82rem;box-shadow:none;display:inline-flex;align-items:center;min-height:40px}
@@ -178,11 +171,6 @@ body.sheet-open .fab{display:none}
 .shcard{position:relative;width:min(680px,100%);max-height:92vh;overflow:auto;background:var(--card);border-radius:28px 28px 0 0;padding:18px 18px calc(22px + env(safe-area-inset-bottom,0px));box-shadow:var(--sh2);animation:up .25s cubic-bezier(.2,.8,.2,1)}
 .shhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .shhead h2{margin:0;font-size:1.25rem;letter-spacing:-.02em}
-.tabs{display:flex;gap:4px;background:var(--soft);border-radius:16px;padding:4px;margin-bottom:14px}
-.tabs[hidden]{display:none}
-.tabs button{flex:1;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:var(--mut);box-shadow:none;border-radius:12px;padding:10px 8px}
-.tabs button:hover{background:transparent;color:var(--tx)}
-.tabs button.on{background:var(--card);color:var(--tx);box-shadow:var(--sh)}
 @keyframes up{from{transform:translateY(40px);opacity:0}}
 @keyframes fade{from{opacity:0}}
 @media(min-width:700px){.sheet{align-items:center}.shcard{border-radius:28px}}
@@ -205,7 +193,7 @@ body.sheet-open #toasts{bottom:calc(20px + env(safe-area-inset-bottom,0px))}
 .lbn[hidden]{display:none}
 .lbc{position:absolute;bottom:calc(18px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);color:#fff;font-weight:700;font-size:.9rem;background:rgba(0,0,0,.45);padding:5px 12px;border-radius:999px}
 .lbc:empty{display:none}
-@media(max-width:700px){.row{grid-template-columns:1fr 1fr}.list{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}.mrow{grid-template-columns:auto 1fr 76px}.mrow select{grid-column:2/-1}.bar2{grid-template-columns:1fr 1fr}.bar2 select{grid-column:1/-1}}
+@media(max-width:700px){.row{grid-template-columns:1fr 1fr}.list{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}.bar2{grid-template-columns:1fr 1fr}.bar2 select{grid-column:1/-1}}
 @media(max-width:480px){.list{grid-template-columns:1fr}.cph{aspect-ratio:16/10}.sub{display:none}.searchrow select{max-width:142px;padding-inline:10px}}
 html{-webkit-tap-highlight-color:transparent}
 button,summary,label,.item{touch-action:manipulation}
@@ -223,9 +211,7 @@ button,summary,label,.item{touch-action:manipulation}
 .addph{padding:13px 16px;min-height:44px}
 .shcard{max-height:92dvh}
 .btns button{min-height:46px}
-.tabs button{min-height:44px}
 input,select{font-size:16px;min-height:46px}
-.mrow input[type=checkbox]{min-height:0;width:24px;height:24px}
 }
 .news{background:color-mix(in srgb,var(--ac) 8%,var(--card));border:1px solid color-mix(in srgb,var(--ac) 30%,var(--bd));border-radius:var(--r);padding:14px 16px 16px;margin-bottom:14px;box-shadow:var(--sh)}
 .news[hidden]{display:none}
@@ -319,17 +305,9 @@ input,select{font-size:16px;min-height:46px}
 <div id="sheet" class="sheet" hidden>
   <div class="shbg" id="shbg"></div>
   <div class="shcard" role="dialog" aria-modal="true" aria-label="Přidat jídla">
-    <div class="shhead"><h2 id="shtitle">Přidat</h2><button id="sheetx" class="ico sm" type="button" aria-label="Zavřít"><i data-i="x"></i></button></div>
+    <div class="shhead"><h2 id="shtitle">Přidat jídlo</h2><button id="sheetx" class="ico sm" type="button" aria-label="Zavřít"><i data-i="x"></i></button></div>
     <div class="secpick" id="secpick"><label for="asec">Přidat do sekce</label><select id="asec"></select></div>
-    <div class="tabs" id="tabs"><button id="tabmenu" class="on" type="button"><i data-i="clipboard"></i>Jídelníček</button><button id="tabman" type="button"><i data-i="pencil"></i>Ručně</button></div>
-    <div id="optmenu">
-      <label class="drop"><input type="file" id="file" accept="image/*"><i data-i="camera"></i>Vyber screenshot nebo fotku jídelníčku</label>
-      <img id="preview" alt="" hidden>
-      <div class="row"><div><label for="mdate">Datum jídelníčku</label><input type="date" id="mdate"></div></div>
-      <div class="btns"><button id="ocr" class="sec" type="button" disabled><i data-i="scan"></i>Přečíst text z obrázku</button></div>
-      <div id="menu" hidden></div>
-    </div>
-    <div id="optman" hidden>
+    <div id="optman">
       <div class="row">
         <div class="full"><label for="name">Název jídla</label><input type="text" id="name" list="dn" autocapitalize="sentences" autocomplete="off"><datalist id="dn"></datalist></div>
         <div><label for="date">Datum</label><input type="date" id="date"></div>
@@ -364,7 +342,6 @@ input,select{font-size:16px;min-height:46px}
 <script>
 (function(){
   var PROXY_URL='https://obedy.privateraids.workers.dev/';   // adresa Cloudflare Workeru (prázdné = jen lokální režim)
-  var OCR_DIR='ocr';                                          // složka s rozpoznáváním textu (načítá se až při použití)
   var $=function(i){return document.getElementById(i)};
   var store=function(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){}return null};
   var msgT=null;
@@ -398,12 +375,10 @@ input,select{font-size:16px;min-height:46px}
     chart:'<path d="M3 3v18h18"/><path d="M8 17v-6M13 17V7M18 17v-4"/>',
     download:'<path d="M12 3v12M7 10l5 5 5-5M4 21h16"/>',
     upload:'<path d="M12 21V9M7 14l5-5 5 5M4 3h16"/>',
-    clipboard:'<rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4V3h6v1M9 11h6M9 15h6"/>',
     pencil:'<path d="M17 3a2.8 2.8 0 0 1 4 4L8 20l-5 1 1-5z"/>',
     bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
     chevl:'<path d="m15 18-6-6 6-6"/>',
     chevr:'<path d="m9 18 6-6-6-6"/>',
-    scan:'<path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/>'
   };
   function ic(n){return '<svg class="i" viewBox="0 0 24 24" aria-hidden="true">'+(ICONS[n]||'')+'</svg>'}
   [].forEach.call(document.querySelectorAll('[data-i]'),function(el){el.innerHTML=ic(el.getAttribute('data-i'))});
@@ -421,15 +396,11 @@ input,select{font-size:16px;min-height:46px}
     var cur=document.documentElement.getAttribute('data-theme'),dark=cur?cur==='dark':sysDark(),n=dark?'light':'dark';
     store('theme',n);applyTheme(n);
   };
-  $('date').value=$('mdate').value=new Date().toISOString().slice(0,10);
-  function setTab(t){
-    $('optmenu').hidden=t!=='menu';$('optman').hidden=t!=='man';
-    $('tabmenu').className=t==='menu'?'on':'';$('tabman').className=t==='man'?'on':'';
-  }
-  function openAdd(t){
-    $('optedit').hidden=true;$('tabs').hidden=false;$('shtitle').textContent='Přidat';
+  $('date').value=new Date().toISOString().slice(0,10);
+  function openAdd(){
+    $('optedit').hidden=true;$('optman').hidden=false;$('shtitle').textContent='Přidat jídlo';
     $('asec').value=page;syncSup();$('secpick').hidden=false;
-    $('sheet').hidden=false;document.body.classList.add('noscroll','sheet-open');setTab(t||'menu');
+    $('sheet').hidden=false;document.body.classList.add('noscroll','sheet-open');
   }
   var editId=null;
   function openEdit(l,v){
@@ -438,14 +409,13 @@ input,select{font-size:16px;min-height:46px}
     $('eprice').value=v.price!=null?v.price:(l.price||'');$('esup').value=v.supplier!=null?v.supplier:(l.supplier||'');
     $('esec').value=v.sec!=null?v.sec:secOf(l);$('esupw').hidden=$('esec').value!=='qs';
     $('secpick').hidden=true;
-    $('shtitle').textContent='Upravit jídlo';$('tabs').hidden=true;$('optmenu').hidden=true;$('optman').hidden=true;$('optedit').hidden=false;
+    $('shtitle').textContent='Upravit jídlo';$('optman').hidden=true;$('optedit').hidden=false;
     $('sheet').hidden=false;document.body.classList.add('noscroll','sheet-open');
   }
   function closeAdd(){$('sheet').hidden=true;document.body.classList.remove('noscroll','sheet-open')}
-  $('fab').onclick=function(){openAdd(page==='qs'?'menu':'man')};
-  $('emptyadd').onclick=function(){openAdd('man')};
+  $('fab').onclick=openAdd;
+  $('emptyadd').onclick=openAdd;
   $('sheetx').onclick=closeAdd;$('shbg').onclick=closeAdd;
-  $('tabmenu').onclick=function(){setTab('menu')};$('tabman').onclick=function(){setTab('man')};
   $('ftog').onclick=function(){$('bar2').hidden=!$('bar2').hidden};
   $('mphoto').onchange=function(e){var n=e.target.files.length;$('mphname').textContent=n>1?n+' fotky':(n?e.target.files[0].name:'')};
   var lbList=[],lbIdx=0;
@@ -997,177 +967,8 @@ input,select{font-size:16px;min-height:46px}
       if(fl.length&&lid){for(var fi=0;fi<fl.length;fi++){msg('Nahrávám fotku '+(fi+1)+'/'+fl.length+'…',true);await addPhoto(lid,fl[fi])}}
       ['name','price'].forEach(function(i){$(i).value=''});$('sup').value='';$('mphoto').value='';$('mphname').textContent='';
       msg((r.added?'Jídlo přidáno ✔':'Takové jídlo už v seznamu je, posunul jsem mu datum.')+(fl.length?(fl.length>1?' Fotky uloženy.':' Fotka uložena.'):''));
-    }catch(e){openAdd('man');msg('Uložení se nepovedlo: '+er(e))}
+    }catch(e){openAdd();msg('Uložení se nepovedlo: '+er(e))}
     $('save').disabled=false;
-  };
-
-  /* ---------- načtení jídelníčku z obrázku (rozpoznávání se stahuje až teď) ---------- */
-  var blob=null,worker=null;
-  $('file').onchange=function(e){
-    blob=e.target.files[0]||null;
-    if(!blob)return;
-    var p=$('preview');p.src=URL.createObjectURL(blob);p.hidden=false;
-    $('ocr').disabled=false;$('menu').hidden=true;
-    msg('Klepni na „Přečíst text z obrázku“.');
-  };
-  function loadScript(src){
-    return new Promise(function(res,rej){
-      var s=document.createElement('script');s.src=src;s.onload=res;
-      s.onerror=function(){rej(new Error('Nepodařilo se načíst '+src+' – je v repozitáři složka „'+OCR_DIR+'“?'))};
-      document.head.appendChild(s);
-    });
-  }
-  async function getWorker(){
-    if(worker)return worker;
-    if(!window.Tesseract)await loadScript(OCR_DIR+'/tesseract.min.js');
-    var base=new URL(OCR_DIR,location.href).href.replace(/\/$/,'');
-    worker=await Tesseract.createWorker('ces',1,{
-      workerPath:base+'/worker.min.js',corePath:base+'/tesseract-core-simd-lstm.wasm.js',langPath:base,gzip:true,
-      logger:function(m){if(m.status==='recognizing text')msg('Čtu text… '+Math.round(m.progress*100)+' %',true)}
-    });
-    return worker;
-  }
-  function shrink(file){
-    return new Promise(function(res,rej){
-      var img=new Image();
-      img.onload=function(){
-        var k=Math.min(2.5,2000/Math.max(img.width,img.height)),c=document.createElement('canvas');
-        c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);
-        var x=c.getContext('2d');x.filter='grayscale(1) contrast(1.2)';x.drawImage(img,0,0,c.width,c.height);
-        c.toBlob(function(b){b?res({blob:b,w:c.width}):rej(new Error('canvas'))},'image/png');
-      };
-      img.onerror=rej;img.src=URL.createObjectURL(file);
-    });
-  }
-  function parse(text){
-    var lines=text.split(/\n/).map(function(l){return l.trim()}).filter(function(l){return l.length>2});
-    var out={};
-    var d=text.match(/(\d{1,2})\s*\.\s*(\d{1,2})\s*\.\s*(20\d{2})/);
-    if(d)out.date=d[3]+'-'+('0'+d[2]).slice(-2)+'-'+('0'+d[1]).slice(-2);
-    var pr=/(\d{2,4}(?:[.,]\d{1,2})?)\s*(?:,-|Kč|KČ|CZK)/i,pm=text.match(pr);
-    if(pm)out.price=pm[1].replace('.',',')+' Kč';
-    var good=function(l){var a=(l.match(/[A-Za-zÀ-žÁ-ž]/g)||[]).length;return a/l.length>0.6&&l.length>=5&&l.length<=70};
-    var withPrice=lines.filter(function(l){return pr.test(l)&&good(l.replace(pr,''))})[0];
-    var name=withPrice?withPrice.replace(pr,'').replace(/^[\d\s.,)\-–]+/,'').replace(/[\s.,\-–]+$/,''):(lines.filter(good)[0]||'');
-    if(name)out.name=name;
-    return out;
-  }
-  function top(o){var b='',n=0;Object.keys(o).forEach(function(k){if(o[k]>n){n=o[k];b=k}});return b}
-  function parseMenu(words,W){
-    var ws=(words||[]).filter(function(w){return w.text&&w.text.trim()}).map(function(w){
-      return {t:w.text.trim(),c:w.confidence,x0:w.bbox.x0,x1:w.bbox.x1,cy:(w.bbox.y0+w.bbox.y1)/2,h:w.bbox.y1-w.bbox.y0}});
-    if(!ws.length)return [];
-    var hs=ws.map(function(w){return w.h}).sort(function(a,b){return a-b}),mh=hs[hs.length>>1]||20;
-    var priceRe=/^\d{1,3}[.,]\d{2}$/;
-    var pr=ws.filter(function(w){return w.x0>W*0.6&&priceRe.test(w.t)}).sort(function(a,b){return a.cy-b.cy});
-    var anchors=[];
-    pr.forEach(function(p){
-      var l=anchors[anchors.length-1];
-      if(l&&Math.abs(l.cy-p.cy)<mh*0.8){if(p.x0<l.x0)anchors[anchors.length-1]=p}else anchors.push(p);
-    });
-    // oddělovače skupin: řádky „Termín pro objednání vypršel…“ nad každou skupinou
-    var sp=[];
-    ws.filter(function(w){return /^(term[ií]n|objedn[aá]n[ií]|vypr[sš]el|objedn[aá]v[aá]te|burzy|j[ií]del)/i.test(w.t)&&w.x0>W*0.4}).map(function(w){return w.cy}).sort(function(a,b){return a-b})
-      .forEach(function(y){if(!sp.length||y-sp[sp.length-1]>mh*3)sp.push(y)});
-    var useG=sp.length>=2;
-    var ok=' a s v z k o u i do na po ve se ze od ke ku ';
-    var rows=[];
-    anchors.forEach(function(a){
-      var byX=function(p,q){return p.x0-q.x0};
-      var tk=ws.filter(function(w){return Math.abs(w.cy-a.cy)<mh*0.9&&w.x0>=W*0.125&&w.x1<=a.x0-2&&/[A-Za-zÀ-ž0-9]/.test(w.t)&&(w.c==null||w.c>=25||/^\d/.test(w.t))&&(w.t.length>3||/\d/.test(w.t)||w.c==null||w.c>=80)&&!/[:|©®@]/.test(w.t)}).sort(byX).map(function(w){return w.t});
-      tk=tk.filter(function(t){return t.length>2||/\d/.test(t)||ok.indexOf(' '+t.toLowerCase()+' ')>-1});
-      while(tk.length>1&&tk[tk.length-1].length<=1&&!/\d/.test(tk[tk.length-1]))tk.pop();
-      var name=tk.join(' ').trim();
-      if(name.length<3)return;
-      name=name.charAt(0).toUpperCase()+name.slice(1);
-      var code=ws.filter(function(w){return w.x0<W*0.12&&Math.abs(w.cy-a.cy)<mh*2.2}).sort(function(p,q){return Math.abs(p.cy-q.cy)<mh*0.5?p.x0-q.x0:p.cy-q.cy}).map(function(w){return w.t}).join(' ');
-      var nm=code.match(/\b([OPDS0]\d{1,2})\b/i);
-      var num=nm?nm[1].toUpperCase().replace(/^0(?=\d)/,'O'):'';
-      var kind=/Pol[eé]v/i.test(code)?'Polévka':(/Ob[eě]d/i.test(code)?'Oběd':'');
-      rows.push({name:name,price:a.t.replace('.',',').replace(/,00$/,'')+' Kč',cy:a.cy,sup:supOf(code),kind:kind,num:num,g:useG?sp.filter(function(y){return y<a.cy}).length:-1});
-    });
-    if(useG){
-      var gs={};
-      rows.forEach(function(r){var g=gs[r.g]=gs[r.g]||{s:{},k:{},n:0};g.n++;if(r.sup)g.s[r.sup]=(g.s[r.sup]||0)+1;if(r.kind)g.k[r.kind]=(g.k[r.kind]||0)+1});
-      var gl=Object.keys(gs).map(Number).sort(function(a,b){return a-b});
-      gl.forEach(function(k){gs[k].sup=top(gs[k].s);gs[k].kind=top(gs[k].k)});
-      var G=gl.map(function(k){return gs[k]});
-      var isSoup=function(g){return g.kind==='Polévka'||g.n===1};
-      // polévka (nebo skupina o jednom jídle) patří stejnému dodavateli jako následující skupina jídel
-      G.forEach(function(g,i){if(!g.sup&&isSoup(g)&&G[i+1]&&G[i+1].sup)g.sup=G[i+1].sup});
-      // skupina jídel bez nálezu převezme dodavatele od polévky před ní
-      G.forEach(function(g,i){if(!g.sup&&G[i-1]&&G[i-1].sup)g.sup=G[i-1].sup});
-      for(var gi=G.length-2;gi>=0;gi--)if(!G[gi].sup&&G[gi+1].sup)G[gi].sup=G[gi+1].sup;
-      rows.forEach(function(r){var g=gs[r.g];r.sup=g.sup||r.sup;r.kind=g.kind||r.kind});
-    }
-    // bez oddělovačů: chybějící dodavatel se převezme z nejbližšího dalšího řádku, jinak z předchozího
-    for(var i=0;i<rows.length;i++){
-      if(rows[i].sup)continue;
-      var j=i+1;while(j<rows.length&&!rows[j].sup)j++;
-      if(j<rows.length)rows[i].sup=rows[j].sup;else if(i>0)rows[i].sup=rows[i-1].sup;
-    }
-    return rows.map(function(r){return {name:r.name,price:r.price,supplier:r.sup,code:r.kind?r.kind+(r.num?' '+r.num:''):''}});
-  }
-  function showMenu(items){
-    var m=$('menu');m.innerHTML='<div class="meta" style="margin-top:12px">Nalezeno '+items.length+' jídel. Odškrtni, co nechceš, a oprav chyby a dodavatele. Jídla, která už v seznamu jsou, se nezdvojí (jen se jim posune datum).</div>';
-    items.forEach(function(it){
-      var r=document.createElement('div');r.className='mrow';
-      var cb=document.createElement('input');cb.type='checkbox';cb.checked=true;
-      var n=document.createElement('input');n.type='text';n.value=it.name;
-      var pp=document.createElement('input');pp.type='text';pp.value=it.price;
-      var sp=document.createElement('select');
-      [''].concat(SUPN).forEach(function(o){var op=document.createElement('option');op.value=o;op.textContent=o||'— dodavatel —';sp.appendChild(op)});
-      sp.value=it.supplier||'';
-      if($('asec').value!=='qs'){sp.style.display='none';r.style.gridTemplateColumns='auto 1fr 80px'}
-      var s=document.createElement('small');s.textContent=it.code||'';
-      r.appendChild(cb);r.appendChild(n);r.appendChild(pp);r.appendChild(sp);if(it.code)r.appendChild(s);
-      r._get=function(){return cb.checked&&n.value.trim()?{name:n.value.trim(),price:money(pp.value),code:it.code||'',supplier:sp.value}:null};
-      m.appendChild(r);
-    });
-    var b=document.createElement('button');b.textContent='Uložit vybrané obědy';
-    b.onclick=async function(){
-      var sel=[].map.call(m.querySelectorAll('.mrow'),function(r){return r._get()}).filter(Boolean);
-      if(!sel.length)return msg('Nic není vybráno.');
-      b.disabled=true;
-      try{
-        var sec=$('asec').value;
-        var r=await addLunches(sel,$('mdate').value,sec);
-        if(sec!==page)setPage(sec);
-        closeAdd();msg('Ukládám…',true);
-        await r.done;
-        m.hidden=true;m.innerHTML='';
-        msg('Přidáno '+r.added+' nových jídel'+(r.seen?', '+r.seen+' už v seznamu bylo.':'.')+' ✔');
-      }catch(e){openAdd('menu');b.disabled=false;msg('Uložení se nepovedlo: '+er(e))}
-    };
-    var w=document.createElement('div');w.className='btns';w.appendChild(b);m.appendChild(w);
-    m.hidden=false;
-  }
-  $('ocr').onclick=async function(){
-    if(!blob)return msg('Nejdřív vyber obrázek.');
-    $('ocr').disabled=true;$('menu').hidden=true;msg('Připravuji čtení (poprvé se stahuje rozpoznávání textu, pár MB)…',true);
-    try{
-      var w=await getWorker();
-      var sh=await shrink(blob);
-      var r=await w.recognize(sh.blob);
-      var text=r.data.text||'';
-      if(!text.trim()){msg('V obrázku se nepodařilo najít žádný text – přidej jídlo ručně.')}
-      else{
-        var items=parseMenu(r.data.words,sh.w);
-        if(items.length>=2){showMenu(items);msg('Hotovo – zkontroluj seznam a ulož. Nastav správné datum jídelníčku.',true)}
-        else{
-          var o=parse(text);
-          setTab('man');
-          if(o.name)$('name').value=o.name;
-          if(o.price)$('price').value=o.price;
-          if(o.date)$('date').value=o.date;
-          msg('Nenašel jsem tabulku jídel – údaje jsem předvyplnil v „Přidat ručně“, zkontroluj je a klepni na „Přidat jídlo“.');
-        }
-      }
-    }catch(e){
-      worker=null;
-      msg('Čtení textu se nepodařilo: '+er(e)+' Přidej jídlo ručně.',true);
-    }
-    $('ocr').disabled=false;
   };
 
   /* ---------- záloha ---------- */
